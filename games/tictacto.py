@@ -1,6 +1,5 @@
 from tkinter import *
 
-
 def check():
 	print("check called")
 	for i in range(3):
@@ -66,9 +65,9 @@ bDone = False
 frame = Frame(window)
 frame.pack()
 
-imageX = PhotoImage(file="x.gif")	
-imageO = PhotoImage(file="o.gif")
-imageE = PhotoImage(file="empty.gif")
+imageX = PhotoImage(file="games/x.gif")	
+imageO = PhotoImage(file="games/o.gif")
+imageE = PhotoImage(file="games/empty.gif")
 
 # build map
 matrix = []
