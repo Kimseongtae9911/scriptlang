@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 
-
 class MainWindow:
 	def __init__(self):
 		# 창 기본 설정
@@ -26,9 +25,15 @@ class MainWindow:
 		self.canvas.pack()
 
 		# 병원 카테고리 - 지역
+		self.SIDO = ''
+		self.SIGUNGU = ''
+		self.UPMYONDONG = ''
 		self.listBoxSIDO = Listbox(frameHospital, selectmode='extended', height=10, width=13)
 		self.listBoxSIGUNGU = Listbox(frameHospital, selectmode='extended', height=10, width=13)
 		self.listBoxUPMYONDONG = Listbox(frameHospital, selectmode='extended', height=10, width=13)
+		self.listBoxSIDO.bind('<<ListboxSelect>>', self.SIDOSelect)
+		self.listBoxSIGUNGU.bind('<<ListboxSelect>>', self.SIGUNGUSelect)
+		self.listBoxUPMYONDONG.bind('<<ListboxSelect>>', self.UPMYONDONGSelect)
 		self.listBoxSIDO.grid(row=0, column=0, padx=10)
 		self.listBoxSIGUNGU.grid(row=0, column=1, padx=10)
 		self.listBoxUPMYONDONG.grid(row=0, column=2, padx=10)
@@ -37,7 +42,7 @@ class MainWindow:
 		frameSubs = Frame(frameHospital, padx=10, pady=10)
 		frameSubs.grid(row=0, column=3)
 
-		self.buttonEmailSendButton = Button(frameSubs, font=("나눔고딕코딩", 13), text="이메일")
+		self.buttonEmailSendButton = Button(frameSubs, font=("나눔고딕코딩", 13), text="이메일", command=self.pressedEmail)
 		self.comboBoxHospitalCategory = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10)
 		self.comboBoxsubject = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10)
 		self.buttonEmailSendButton.pack(side='top', fill='both', pady=10)
@@ -61,11 +66,11 @@ class MainWindow:
 		self.entryPosY.grid(row=1, column=1)
 
 		# 병원 - 검색 버튼
-		self.buttonSearch = Button(frameEntry, font=("나눔고딕코딩", 13), text="검색")
+		self.buttonSearch = Button(frameEntry, font=("나눔고딕코딩", 13), text="검색", command=self.pressedSearch)
 		self.buttonSearch.pack(side='left', fill='both', padx=10)
 
 		# 병원 - 지도 버튼
-		self.buttonMap = Button(frameEntry, font=("나눔고딕코딩", 13), text="지도")
+		self.buttonMap = Button(frameEntry, font=("나눔고딕코딩", 13), text="지도", command=self.pressedMap)
 		self.buttonMap.pack(side='left', fill='both', padx=10)
 
 		# 결과창
@@ -77,9 +82,71 @@ class MainWindow:
 	def mainloop(self):
 		self.window.mainloop()
 
+	def pressedEmail(self):
+		import Email
+		print("email")
+		pass
+	
+	def pressedSearch(self):
+		if not self.UPMYONDONG:
+			print("error!!!")
+			return
+		
+		print("search :", self.SIDO, self.SIGUNGU, self.UPMYONDONG)
+		# 병원을 검색하고 리스트에 붙여넣는다
+		
+
+	def pressedMap(self):
+		print("map")
+		pass
+
+	def SIDOSelect(self, event):
+		# 시군구, 읍면동 리스트박스 비우기
+
+		# 시군구 리스트박스 갱신
+
+		# 검색 변수 갱신
+		if event.widget.curselection():
+			self.SIDO = self.listBoxSIDO.selection_get()
+			self.SIGUNGU = ''
+			self.UPMYONDONG = ''
+		pass
+
+	def SIGUNGUSelect(self, event):
+		# 읍면동 리스트박스 비우기
+
+		# 읍면동 리스트박스 갱신
+
+		# 검색 변수 갱신
+		if event.widget.curselection():
+			self.SIGUNGU = self.listBoxSIGUNGU.selection_get()
+			self.UPMYONDONG = ''
+		pass
+
+	def UPMYONDONGSelect(self, event):
+		# 검색 변수 갱신
+		if event.widget.curselection():
+			self.UPMYONDONG = self.listBoxUPMYONDONG.selection_get()
+		pass
+
+	def testSetting(self):
+		self.listBoxSIDO.insert(END, "서울시")
+		self.listBoxSIDO.insert(END, "인천시")
+		self.listBoxSIDO.insert(END, "경기도")
+
+		self.listBoxSIGUNGU.insert(END, "시흥시")
+		self.listBoxSIGUNGU.insert(END, "asdf")
+		self.listBoxSIGUNGU.insert(END, "zxcv")
+
+		self.listBoxUPMYONDONG.insert(END, "정왕동")
+		self.listBoxUPMYONDONG.insert(END, "456")
+		self.listBoxUPMYONDONG.insert(END, "789")
+		pass
 
 
+if __name__ == '__main__':
+	hospital = MainWindow()
+	hospital.testSetting()
+	hospital.mainloop()
 
-hospital = MainWindow()
 
-hospital.mainloop()
