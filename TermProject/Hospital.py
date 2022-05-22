@@ -1,3 +1,4 @@
+import Server as server
 from tkinter import *
 from tkinter import ttk
 
@@ -6,14 +7,13 @@ class MainWindow:
 		# 창 기본 설정
 		self.width = 500
 		self.height = 700
-		self.window = Tk()
-		self.window.title("Hospital")
-		self.window.geometry("" + str(self.width) + "x" + str(self.height))
+		server.window.title("Hospital")
+		server.window.geometry("" + str(self.width) + "x" + str(self.height))
 
-		frameTitle = Frame(self.window, padx=10, pady=10,)
-		frameHospital = Frame(self.window, padx=10, pady=10)
-		frameEntry = Frame(self.window, padx=10, pady=10)
-		frameResultList = Frame(self.window, padx=10, pady=10)
+		frameTitle = Frame(server.window, padx=10, pady=10,)
+		frameHospital = Frame(server.window, padx=10, pady=10)
+		frameEntry = Frame(server.window, padx=10, pady=10)
+		frameResultList = Frame(server.window, padx=10, pady=10)
 		frameTitle.pack(side='top', fill='x')
 		frameHospital.pack(side='top', fill='x')
 		frameEntry.pack(side='top', fill='x')
@@ -80,12 +80,12 @@ class MainWindow:
 		self.listboxPharmacy.pack(side='right', fill='both', padx=10)
 
 	def mainloop(self):
-		self.window.mainloop()
+		server.window.mainloop()
 
 	def pressedEmail(self):
-		import Email
-		print("email")
-		pass
+		from Email import Mail
+		if server.puwindow == None:
+			Mail.popupInput()
 	
 	def pressedSearch(self):
 		if not self.UPMYONDONG:
