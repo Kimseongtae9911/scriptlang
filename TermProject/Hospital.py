@@ -52,7 +52,8 @@ class MainWindow:
 		frameSubs = Frame(frameHospital, padx=10, pady=10)
 		frameSubs.grid(row=0, column=3)
 
-		self.buttonEmailSendButton = Button(frameSubs, font=("나눔고딕코딩", 13), text="이메일", command=self.pressedEmail)
+		self.emailPhoto = PhotoImage(file='TermProject/Resource/Email.png')
+		self.buttonEmailSendButton = Button(frameSubs, image=self.emailPhoto, command=self.pressedEmail)
 		self.comboBoxHospitalCategory = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(ZIPCODE.keys()))
 		self.comboBoxsubject = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(CLCODE.keys()))
 		self.buttonEmailSendButton.pack(side='top', fill='both', pady=10)
