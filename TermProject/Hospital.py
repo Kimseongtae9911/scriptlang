@@ -136,9 +136,21 @@ class MainWindow:
 
 # 지도 버튼 
 	def pressedMap(self):
-		self.map_osm = folium.Map(location=[37.3402849, 126.7313189], zoom_start=13)
-
-		folium.Marker([37.3402849, 126.7313189], popup='한국공학대학교').add_to(self.map_osm)
+		onlyname = self.listboxHospital.get(0)
+		if onlyname == '':
+			print('only one')
+			posy, posx = self.hospitalPoint[onlyname]
+			self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
+			folium.Marker([posx, posy], popup=onlyname).add_to(self.map_osm)
+		else:
+			print('many hospital')
+			for i in range(self.listboxHospital.size() - 1):
+				name = self.listboxHospital.get(i)
+				posy, posx = self.hospitalPoint[name]
+				if i == 0:
+					self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
+				folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
+		
 		self.map_osm.save('osm.html')
 		webbrowser.open_new('osm.html')
 

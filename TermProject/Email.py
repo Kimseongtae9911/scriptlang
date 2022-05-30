@@ -23,7 +23,8 @@ class Mail():
         Mail.toAddr = Mail.inputEmail3.get()
 
         # 나중에 병원정보 보낼 때는 MULTIPART이용
-        msg = MIMEText('''
+        msg = MIMEText(
+        '''
         병원정보
         김호준
         ''')
