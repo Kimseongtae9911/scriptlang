@@ -1,6 +1,8 @@
 import Server as server
 from tkinter import *
 from tkinter import ttk
+import folium
+import webbrowser
 
 pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
 
@@ -371,6 +373,7 @@ CLCODE = {
 	'한방응급' : '88'
 }
 
+
 class MainWindow:
 	def __init__(self):
 		# 창 기본 설정
@@ -435,11 +438,12 @@ class MainWindow:
 		self.entryPosY.grid(row=1, column=1)
 
 		# 병원 - 검색 버튼
-		self.buttonSearch = Button(frameEntry, font=("나눔고딕코딩", 13), text="검색", command=self.pressedSearch)
+		self.buttonSearch = Button(frameEntry, font=("나눔고딕코딩", 13), text="검색", width=3, height=1, command=self.pressedSearch)
 		self.buttonSearch.pack(side='left', fill='both', padx=10)
 
 		# 병원 - 지도 버튼
-		self.buttonMap = Button(frameEntry, font=("나눔고딕코딩", 13), text="지도", command=self.pressedMap)
+		self.mapphoto = PhotoImage(file='TermProject/Resource/Map.png')
+		self.buttonMap = Button(frameEntry, image=self.mapphoto, command=self.pressedMap)
 		self.buttonMap.pack(side='left', fill='both', padx=10)
 
 		# 결과창
