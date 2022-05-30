@@ -154,6 +154,8 @@ class MainWindow:
 			for i in range(self.listboxHospital.size() - 1):
 				name = self.listboxHospital.get(i)
 				posy, posx = self.hospitalPoint[name]
+				print(posy)
+				print(posx)
 				if i == 0:
 					self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
 				folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
