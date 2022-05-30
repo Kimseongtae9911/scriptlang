@@ -59,6 +59,8 @@ class MainWindow:
 		self.buttonEmailSendButton.pack(side='top', fill='both', pady=10)
 		self.comboBoxHospitalCategory.pack(side='top', fill='both', pady=20)
 		self.comboBoxsubject.pack(side='top', fill='both', pady=20)
+		self.comboBoxHospitalCategory.current(0)
+		self.comboBoxsubject.current(0)
 
 		# 병원 - 이름
 		Label(frameEntry, font=("나눔고딕코딩", 13), text='병원명').pack(side='left')
@@ -92,11 +94,14 @@ class MainWindow:
 		self.listboxHospital.pack(side='left', fill='both', padx=10)
 		self.listboxPharmacy.pack(side='right', fill='both', padx=10)
 
+
+
 		self.hospitalPoint = {}
 		self.pharmacyPoint = {}
 
 		for data in SIDO:
-			self.listBoxSIDO.insert(END, data)
+			if data != '':
+				self.listBoxSIDO.insert(END, data)
 
 	def mainloop(self):
 		server.window.mainloop()
@@ -112,13 +117,15 @@ class MainWindow:
 # 검색 버튼
 	def pressedSearch(self):
 		self.listboxHospital.delete(0, END)
+		self.listboxPharmacy.delete(0, END)
 		if not self.UPMYONDONG:
 			# print("error!!!")
 			pass
 
 		# 병원을 검색한다
-		response = self.search(url=hospital_url, key=hospital_pw, sidoCd=str(SIDO[self.SIDO] * 10000),
+		response = search(url=hospital_url, key=hospital_pw, sidoCd=str(SIDO[self.SIDO] * 10000),
 			sgguCd=str(SIGUNGU[self.SIGUNGU]), emdongNm=self.UPMYONDONG, yadmNm=self.entryHospitalName.get(), 
+			zipCd=ZIPCODE[self.comboBoxHospitalCategory.get()], clCd=CLCODE[self.comboBoxsubject.get()],
 			xPos=self.entryPosX.get(), yPos=self.entryPosY.get())
 
 		self.hospitalPoint.clear()
@@ -150,7 +157,6 @@ class MainWindow:
 			self.SIDO = self.listBoxSIDO.selection_get()
 			self.SIGUNGU = ''
 			self.UPMYONDONG = ''
-			print(self.SIDO, SIDO[self.SIDO])
 
 		# 시군구, 읍면동 리스트박스 비우기
 		self.listBoxSIGUNGU.delete(0, END)
@@ -158,7 +164,7 @@ class MainWindow:
 		
 		# 시군구 리스트박스 갱신
 		for data in SIGUNGU:
-			if SIDO[self.SIDO] == SIGUNGU[data] // 10000:
+			if SIDO[self.SIDO] != '' and SIDO[self.SIDO] == SIGUNGU[data] // 10000:
 				self.listBoxSIGUNGU.insert(END, data)
 
 
@@ -186,14 +192,21 @@ class MainWindow:
 
 # 병원 이름 선택
 	def hospitalSelect(self, event):
+		for i in range(self.listboxHospital.size()):
+			print(self.listboxHospital.get(i))
+
 		if not self.listboxHospital.curselection():
 			print("empty hospital list")
 			return
+		#print(self.listboxHospital.curselection())
+		#print(self.listboxHospital.selection_get())
 		self.listboxPharmacy.delete(0, END)
 		pos = self.hospitalPoint[self.listboxHospital.selection_get()]
 
 		# 약국 검색
-		response = self.search(url=pharmacy_url, key=pharmacy_pw, xPos=pos[0], yPos=pos[1], radius=3000)
+		response = search(url=pharmacy_url, key=pharmacy_pw, 
+			sidoCd=str(SIDO[self.SIDO] * 10000), sgguCd=str(SIGUNGU[self.SIGUNGU]), 
+			xPos=pos[0], yPos=pos[1], radius=1000)
 
 		# 리스트에 붙여넣는다
 		from xml.etree import ElementTree
@@ -217,15 +230,15 @@ class MainWindow:
 		pass
 
 
-	def search(self, url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
-		# 병원을 검색한다
-		import requests
-		params = {
-			'serviceKey' : key, 'pageNo' : page, 'numOfRows' : numOfRows, 'sidoCd' : sidoCd, 
-			'sgguCd' : sgguCd, 'emdongNm' : emdongNm, 'yadmNm' : yadmNm, 'zipCd' : zipCd, 
-			'clCd' : clCd, 'dgsbjtCd' : dgsbjtCd, 'xPos' : xPos, 'yPos' : yPos, 'radius' : radius }
+def search(url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
+	# 병원을 검색한다
+	import requests
+	params = {
+		'serviceKey' : key, 'pageNo' : page, 'numOfRows' : numOfRows, 'sidoCd' : sidoCd, 
+		'sgguCd' : sgguCd, 'emdongNm' : emdongNm, 'yadmNm' : yadmNm, 'zipCd' : zipCd, 
+		'clCd' : clCd, 'dgsbjtCd' : dgsbjtCd, 'xPos' : xPos, 'yPos' : yPos, 'radius' : radius }
 
-		return requests.get(url, params=params)
+	return requests.get(url, params=params)
 
 
 if __name__ == '__main__':
