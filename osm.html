@@ -23,7 +23,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_76792f4a64794a98320a153f971d4c04 {
+                #map_f240df3a8554abc222e66f115e3b6b5b {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -35,13 +35,13 @@
 </head>
 <body>    
     
-            <div class="folium-map" id="map_76792f4a64794a98320a153f971d4c04" ></div>
+            <div class="folium-map" id="map_f240df3a8554abc222e66f115e3b6b5b" ></div>
         
 </body>
 <script>    
     
-            var map_76792f4a64794a98320a153f971d4c04 = L.map(
-                "map_76792f4a64794a98320a153f971d4c04",
+            var map_f240df3a8554abc222e66f115e3b6b5b = L.map(
+                "map_f240df3a8554abc222e66f115e3b6b5b",
                 {
                     center: [37.4882978, 127.0851508],
                     crs: L.CRS.EPSG3857,
@@ -55,64 +55,70 @@
 
         
     
-            var tile_layer_91a849c2084486e0d339a92205c8a693 = L.tileLayer(
+            var tile_layer_331e98d3b6d7678ba9c7988db5ebf4c7 = L.tileLayer(
                 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(map_76792f4a64794a98320a153f971d4c04);
+            ).addTo(map_f240df3a8554abc222e66f115e3b6b5b);
         
     
-            var marker_855eb07350d6cc746f34789e4cdaae02 = L.marker(
+            var marker_4d6e58fe099a9de585c703cc61089a5d = L.marker(
                 [37.4882978, 127.0851508],
                 {}
-            ).addTo(map_76792f4a64794a98320a153f971d4c04);
+            ).addTo(map_f240df3a8554abc222e66f115e3b6b5b);
         
     
-        var popup_ce6da9a9f31447c6b2c2f8a573948bf3 = L.popup({"maxWidth": "100%"});
+            var icon_f3393c139e38e8dd508982f7739b3141 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "flag", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_4d6e58fe099a9de585c703cc61089a5d.setIcon(icon_f3393c139e38e8dd508982f7739b3141);
+        
+    
+        var popup_e45a037dc378179e804d25a7fa929176 = L.popup({"maxWidth": "100%"});
 
         
-            var html_33913341703e625bef047d1efcdc035a = $(`<div id="html_33913341703e625bef047d1efcdc035a" style="width: 100.0%; height: 100.0%;">삼성서울병원</div>`)[0];
-            popup_ce6da9a9f31447c6b2c2f8a573948bf3.setContent(html_33913341703e625bef047d1efcdc035a);
+            var html_e4061f17d2a4cc4e03175babc4585f02 = $(`<div id="html_e4061f17d2a4cc4e03175babc4585f02" style="width: 100.0%; height: 100.0%;">삼성서울병원</div>`)[0];
+            popup_e45a037dc378179e804d25a7fa929176.setContent(html_e4061f17d2a4cc4e03175babc4585f02);
         
 
-        marker_855eb07350d6cc746f34789e4cdaae02.bindPopup(popup_ce6da9a9f31447c6b2c2f8a573948bf3)
+        marker_4d6e58fe099a9de585c703cc61089a5d.bindPopup(popup_e45a037dc378179e804d25a7fa929176)
         ;
 
         
     
     
-            var marker_c51e66e898befd3f10c16cc58d7a9c1e = L.marker(
+            var marker_a4331c4322920227bb2265e76a704db9 = L.marker(
                 [37.4929296, 127.0462683],
                 {}
-            ).addTo(map_76792f4a64794a98320a153f971d4c04);
+            ).addTo(map_f240df3a8554abc222e66f115e3b6b5b);
         
     
-        var popup_5ba35135b17d0961fc5594f582557f6a = L.popup({"maxWidth": "100%"});
+        var popup_bcdd174f62324899d3d71f2c2c03d313 = L.popup({"maxWidth": "100%"});
 
         
-            var html_a05ab6b0bd3e577c18eb237cd64f5ba9 = $(`<div id="html_a05ab6b0bd3e577c18eb237cd64f5ba9" style="width: 100.0%; height: 100.0%;">연세대학교의과대학 강남세브란스병원</div>`)[0];
-            popup_5ba35135b17d0961fc5594f582557f6a.setContent(html_a05ab6b0bd3e577c18eb237cd64f5ba9);
+            var html_0653de5c2baff238d5c133aa40574c37 = $(`<div id="html_0653de5c2baff238d5c133aa40574c37" style="width: 100.0%; height: 100.0%;">연세대학교의과대학 강남세브란스병원</div>`)[0];
+            popup_bcdd174f62324899d3d71f2c2c03d313.setContent(html_0653de5c2baff238d5c133aa40574c37);
         
 
-        marker_c51e66e898befd3f10c16cc58d7a9c1e.bindPopup(popup_5ba35135b17d0961fc5594f582557f6a)
+        marker_a4331c4322920227bb2265e76a704db9.bindPopup(popup_bcdd174f62324899d3d71f2c2c03d313)
         ;
 
         
     
     
-            var marker_03531f69b448ed38d8585379960caaf0 = L.marker(
+            var marker_f326d8cd08b0626e22763ce3d093b461 = L.marker(
                 [37.5067941, 127.035055],
                 {}
-            ).addTo(map_76792f4a64794a98320a153f971d4c04);
+            ).addTo(map_f240df3a8554abc222e66f115e3b6b5b);
         
     
-        var popup_73f143ea659ae8bbbeec429a48163a2d = L.popup({"maxWidth": "100%"});
+        var popup_ab8550af29d14df412baf02c1581a93c = L.popup({"maxWidth": "100%"});
 
         
-            var html_dfa1b2987433368cc112e8c6bfccee22 = $(`<div id="html_dfa1b2987433368cc112e8c6bfccee22" style="width: 100.0%; height: 100.0%;">차의과학대학교 강남차병원</div>`)[0];
-            popup_73f143ea659ae8bbbeec429a48163a2d.setContent(html_dfa1b2987433368cc112e8c6bfccee22);
+            var html_e54818be33a02638b2bb5fc8cd5a2bc4 = $(`<div id="html_e54818be33a02638b2bb5fc8cd5a2bc4" style="width: 100.0%; height: 100.0%;">차의과학대학교 강남차병원</div>`)[0];
+            popup_ab8550af29d14df412baf02c1581a93c.setContent(html_e54818be33a02638b2bb5fc8cd5a2bc4);
         
 
-        marker_03531f69b448ed38d8585379960caaf0.bindPopup(popup_73f143ea659ae8bbbeec429a48163a2d)
+        marker_f326d8cd08b0626e22763ce3d093b461.bindPopup(popup_ab8550af29d14df412baf02c1581a93c)
         ;
 
         

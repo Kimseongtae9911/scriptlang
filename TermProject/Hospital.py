@@ -143,23 +143,33 @@ class MainWindow:
 
 # 지도 버튼 
 	def pressedMap(self):
-		onlyname = self.listboxHospital.get(0)
-		if onlyname == '':
-			print('only one')
-			posy, posx = self.hospitalPoint[onlyname]
-			self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
-			folium.Marker([posx, posy], popup=onlyname).add_to(self.map_osm)
-		else:
-			print('many hospital')
-			for i in range(self.listboxHospital.size() - 1):
-				name = self.listboxHospital.get(i)
-				posy, posx = self.hospitalPoint[name]
-				print(posy)
-				print(posx)
-				if i == 0:
-					self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
-				folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
+		# 지도에 병원 표시
+		# 선택한 것이 있다면 선택한 병원과 약국만 표시
+		# 없다면 리스트의 모든 병원 표시
+
+		if self.listboxHospital.selection_get() in SIGUNGU or self.listboxHospital.selection_get() in UPMYONDONG:
+			pass
+		print(self.listboxHospital.selection_get())
+		for i in range(self.listboxHospital.size() - 1):
+			name = self.listboxHospital.get(i)
+			posy, posx = self.hospitalPoint[name]		
+			if i == 0:
+				self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
+			# 좌표없는 병원들 예외처리
+			if posx == -1 or posy == -1:
+				pass
+			else:
+				# 선택한 병원만 색을 다르게 표시
+				if name == self.listboxHospital.selection_get():
+					color = 'red'
+					icon = 'flag'
+					folium.Marker([posx, posy], popup=name, icon=folium.Icon(color=color, icon=icon)).add_to(self.map_osm)
+				else:	
+					folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
 		
+		# 지도에 약국 표시
+
+
 		self.map_osm.save('osm.html')
 		webbrowser.open_new('osm.html')
 
@@ -206,9 +216,6 @@ class MainWindow:
 
 # 병원 이름 선택
 	def hospitalSelect(self, event):
-		for i in range(self.listboxHospital.size()):
-			print(self.listboxHospital.get(i))
-
 		if not self.listboxHospital.curselection():
 			print("empty hospital list")
 			return
