@@ -173,7 +173,10 @@ class YahtzeeBoard:
             self.round += 1
         if (self.round == 13):
             self.players.sort(key=lambda x: x.getTotalScore())
-            tkinter.messagebox.showinfo('결과', self.players[-1].toString()+'의 승리!')
+            msg = tkinter.messagebox.showinfo('결과', self.players[-1].toString()+'의 승리!')
+            if msg == 'ok':
+                self.window.destroy()
+                self.resetGame()
         
         # 다시 Roll Dice 과 diceButtons 버튼 활성화
         self.roll = 0
@@ -184,6 +187,18 @@ class YahtzeeBoard:
             self.diceButtons[i]['text'] = '?'
             self.diceButtons[i]['state'] = 'disabled'
             self.diceButtons[i]['bg'] = self.color_btn_bg
+    
+    def resetGame(self):
+        self.dice.clear()
+        self.diceButtons.clear()
+        self.fields.clear()
+        self.players.clear()
+        self.numPlayers = 0
+        self.player = 0
+        self.round = 0
+        self.roll = 0
+        self.InitGame()
+
 
 if __name__ == '__main__':
     YahtzeeBoard()
