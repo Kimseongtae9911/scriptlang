@@ -58,8 +58,8 @@ class MainWindow:
 
 		self.emailPhoto = PhotoImage(file='TermProject/Resource/Email.png')
 		self.buttonEmailSendButton = Button(frameSubs, image=self.emailPhoto, command=self.pressedEmail)
-		self.comboBoxHospitalCategory = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(ZIPCODE.keys()))
-		self.comboBoxsubject = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(CLCODE.keys()))
+		self.comboBoxHospitalCategory = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(CLCD.keys()))
+		self.comboBoxsubject = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(DGSBJTCD.keys()))
 		self.buttonEmailSendButton.pack(side='top', fill='both', pady=10)
 		self.comboBoxHospitalCategory.pack(side='top', fill='both', pady=20)
 		self.comboBoxsubject.pack(side='top', fill='both', pady=20)
@@ -129,9 +129,6 @@ class MainWindow:
 
 # 검색 버튼
 	def pressedSearch(self):
-		if server.gwindow != None:
-			server.gwindow = None
-
 		self.lastSelectHospitalIdx = -1
 		self.listboxHospital.delete(0, END)
 		self.listboxPharmacy.delete(0, END)
@@ -142,7 +139,7 @@ class MainWindow:
 		# 병원을 검색한다
 		response = search(url=hospital_url, key=hospital_pw, sidoCd=str(SIDO[self.SIDO] * 10000),
 			sgguCd=str(SIGUNGU[self.SIGUNGU]), emdongNm=self.UPMYONDONG, yadmNm=self.entryHospitalName.get(), 
-			zipCd=ZIPCODE[self.comboBoxHospitalCategory.get()], clCd=CLCODE[self.comboBoxsubject.get()],
+			clCd=CLCD[self.comboBoxHospitalCategory.get()], dgsbjtCd=DGSBJTCD[self.comboBoxsubject.get()],
 			xPos=self.entryPosX.get(), yPos=self.entryPosY.get())
 
 		self.hospitalList.clear()
@@ -158,9 +155,11 @@ class MainWindow:
 			cnt += 1
 			hospital = Hospital()
 			hospital.getInfo(item)
-			self.hospitalList.append(hospital)
+			self.hospitalList.append(hospital)		
 		
-		Graph.Graph(self.hospitalList)
+		# 그래프 출력 + 예외처리
+		if self.comboBoxsubject.get() == '선택안함' and self.comboBoxHospitalCategory.get() == '선택안함' and self.hospitalList != []:
+			Graph.Graph(self.hospitalList)	
 
 # 지도 버튼 
 	def pressedMap(self):

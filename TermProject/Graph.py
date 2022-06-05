@@ -3,15 +3,18 @@ import Server as server
 
 class Graph:
     def __init__(self, hospitalList):
-        self.hospitalList = hospitalList
-        self.barnum = 0
-
-        server.gwindow = Toplevel(server.window)
-        server.gwindow.geometry("1200x400+600+450")
-        server.gwindow.title("병원 종류 분포도")
+        # 그래프가 이미 띄워져 있다면 새로운 창을 만들지 않음(예외처리)
+        if server.gwindow == None:
+            server.gwindow = Toplevel(server.window)
+            server.gwindow.geometry("1200x400+600+450")
+            server.gwindow.title("병원 종류 분포도")
+            server.gwindow.protocol('WM_DELETE_WINDOW', Graph.exit_popup)
 
         w = Canvas(server.gwindow, width = 1000, height=300, bg='green') 
         w.place(relx=.5, rely=.5,anchor= CENTER)
+
+        self.hospitalList = hospitalList
+        self.barnum = 0
 
         # 데이터 분류
         hospitalNum = {'상급종합' : 0, '종합병원' : 0, '병원' : 0, '요양병원' : 0, '정신병원' : 0, '의원' : 0, '치과병원' : 0, '치과의원' : 0, '조산원' : 0, '보건소' : 0, '보건지소' : 0, '보건진료소' : 0, '보건의료원' : 0, '한방병원' : 0, '한의원' : 0}
@@ -61,3 +64,6 @@ class Graph:
             canvas.create_text((left+right)//2, bottom+10, text=key, tags="hospital")
             self.barnum += 1
 
+    def exit_popup():
+        server.gwindow.destroy()
+        server.gwindow = None
