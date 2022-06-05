@@ -18,22 +18,57 @@ class Mail():
 
     # 메일 입력받기
     def inputMail():
+        from typing import Iterable
+
         Mail.fromAddr = Mail.inputEmail.get()
-        # Mail.password = Mail.inputEmail2.get()
-        Mail.password = 'wrmdfixlprydcjfh'
+        Mail.password = Mail.inputEmail2.get()
+        # Mail.password = 'vzgshxkajhlygayw'
         Mail.toAddr = Mail.inputEmail3.get()
 
-        # 나중에 병원정보 보낼 때는 MULTIPART이용
-        msg = MIMEText(
-            '''
-            병원이름 : 삼성서울병원
-            병원주소 : 서울특별시 강남구 일원동 50 삼성의료원
-            병원위치(위도, 경도) : 37.4882978, 127.0851508
-            ''')
-
+        msg = MIMEMultipart()
         msg['Subject'] = '병원 및 약국 정보' # 이메일 제목
         msg['From'] = Mail.fromAddr
         msg['To'] = Mail.toAddr
+
+        interface1 = MIMEText("==============================병원정보==============================")
+        interface2 = MIMEText("==============================약국정보==============================")
+        msg.attach(interface1)
+
+        # 병원정보 msg에 넣기
+        if isinstance(Mail.hospitalList, Iterable):
+            for hospital in Mail.hospitalList:
+                name = MIMEText('병원 이름 : ' + hospital.yadmNm)
+                cldNm = MIMEText('병원 종류 : ' + hospital.clCdNm)
+                addr = MIMEText('병원 주소 : ' + hospital.addr)
+                telno = MIMEText('병원 전화번호 : ' + hospital.telno + '\n')
+                msg.attach(name)
+                msg.attach(cldNm)
+                msg.attach(addr)
+                msg.attach(telno)
+        else:
+            name = MIMEText('병원 이름 : ' + Mail.hospitalList.yadmNm)
+            cldNm = MIMEText('병원 종류 : ' + Mail.hospitalList.clCdNm)
+            addr = MIMEText('병원 주소 : ' + Mail.hospitalList.addr)
+            telno = MIMEText('병원 전화번호 : ' + Mail.hospitalList.telno + '\n')
+            msg.attach(name)
+            msg.attach(cldNm)
+            msg.attach(addr)
+            msg.attach(telno)
+
+        # 약국정보 msg에 넣기
+        if Mail.pharmacyList != []:
+            msg.attach(interface2)
+            for pharmacy in Mail.pharmacyList:
+                name = MIMEText('약국 이름 : ' + pharmacy.yadmNm)
+                addr = MIMEText('약국 주소 : ' + pharmacy.addr)
+                telno = MIMEText('약국 전화번호 : ' + pharmacy.telno)
+                distance = round(pharmacy.distance, 2)
+                dis = MIMEText('병원으로부터 거리 : ' + str(distance) + 'm' + '\n')
+                msg.attach(name)
+                msg.attach(addr)
+                msg.attach(telno)
+                msg.attach(dis)
+
 
         Mail.sendMail(msg)
 
@@ -46,7 +81,9 @@ class Mail():
         server.puwindow = None
 
     # 팝업창
-    def popupInput():
+    def popupInput(hospitalList, pharmacyList):
+        Mail.hospitalList = hospitalList
+        Mail.pharmacyList = pharmacyList
         server.puwindow = Toplevel(server.window)
         server.puwindow.geometry("300x450")
         server.puwindow.title("이메일 정보 입력")
@@ -71,7 +108,7 @@ class Mail():
         Mail.inputEmail.pack(fill='x', padx=10, expand=True)
 
         Label(frameMyPasswText, font=("나눔고딕코딩", 13), text='비밀번호 입력').pack(side='left')
-        Mail.inputEmail2 = Entry(frameMyPassw, width=200)
+        Mail.inputEmail2 = Entry(frameMyPassw, width=200, show='*')
         Mail.inputEmail2.pack(fill='x', padx=10, expand=True)
 
         Label(frameToEmailText, font=("나눔고딕코딩", 13), text='받을 이메일 주소입력').pack(side='left')

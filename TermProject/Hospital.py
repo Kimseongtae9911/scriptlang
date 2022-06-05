@@ -1,6 +1,7 @@
 import Server as server
 from tkinter import *
 from tkinter import ttk
+import tkinter.messagebox
 from locationDict import *
 from InfoClass import *
 import folium
@@ -112,8 +113,16 @@ class MainWindow:
 # 이메일 버튼
 	def pressedEmail(self):
 		from Email import Mail
-		if server.puwindow == None:
-			Mail.popupInput()
+
+		# 검색하지 않고 이메일 버튼 누를 경우 예외처리
+		if self.hospitalList == []:
+			tkinter.messagebox.showinfo('오류', '검색을 먼저 해주세요')
+		else:
+			if server.puwindow == None:
+				if self.lastSelectHospitalIdx >= 0:
+					Mail.popupInput(self.hospitalList[self.lastSelectHospitalIdx], self.pharmacyList)
+				else:
+					Mail.popupInput(self.hospitalList, self.pharmacyList)
 	
 
 # 검색 버튼
@@ -154,7 +163,7 @@ class MainWindow:
 
 		i = 0
 
-		# 선택된 것이 병원이라면
+		# 병원을 선택안했을 때
 		if self.listboxHospital.curselection() == ():
 			for hospital in self.hospitalList:
 				name = hospital.yadmNm
@@ -170,7 +179,7 @@ class MainWindow:
 				icon = 'plus'
 				folium.Marker([posx, posy], popup=name, icon=folium.Icon(icon=icon)).add_to(self.map_osm)
 		
-		# 지도에 약국과 선택한 병원만 표시
+		# 병원을 선택했을때
 		else:
 			if self.lastSelectHospitalIdx >= 0:
 				name = self.hospitalList[self.lastSelectHospitalIdx].yadmNm
