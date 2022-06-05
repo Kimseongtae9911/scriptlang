@@ -20,6 +20,7 @@ class Mail():
     def inputMail():
         from typing import Iterable
 
+        # Entry로부터 입력
         Mail.fromAddr = Mail.inputEmail.get()
         Mail.password = Mail.inputEmail2.get()
         # Mail.password = 'vzgshxkajhlygayw'

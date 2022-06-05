@@ -6,6 +6,8 @@ from locationDict import *
 from InfoClass import *
 import folium
 import webbrowser
+import Graph
+
 
 hospital_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
 pharmacy_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
@@ -127,6 +129,9 @@ class MainWindow:
 
 # 검색 버튼
 	def pressedSearch(self):
+		if server.gwindow != None:
+			server.gwindow = None
+
 		self.lastSelectHospitalIdx = -1
 		self.listboxHospital.delete(0, END)
 		self.listboxPharmacy.delete(0, END)
@@ -154,6 +159,8 @@ class MainWindow:
 			hospital = Hospital()
 			hospital.getInfo(item)
 			self.hospitalList.append(hospital)
+		
+		Graph.Graph(self.hospitalList)
 
 # 지도 버튼 
 	def pressedMap(self):
@@ -275,7 +282,7 @@ class MainWindow:
 
 		for i in range(len(self.pharmacyList)):
 			if i >= 10:
-				break;
+				break
 			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + self.pharmacyList[i].yadmNm)
 
 
@@ -300,7 +307,7 @@ class MainWindow:
 		pass
 
 
-def search(url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
+def search(url, key, page='1', numOfRows='100', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
 	# 병원을 검색한다
 	import requests
 	params = {
