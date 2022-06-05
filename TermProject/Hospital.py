@@ -1,3 +1,4 @@
+from cmath import exp
 import Server as server
 from tkinter import *
 from tkinter import ttk
@@ -26,11 +27,13 @@ class MainWindow:
 
 		frameTitle = Frame(server.window, padx=10, pady=10,)
 		frameHospital = Frame(server.window, padx=10, pady=10)
-		frameEntry = Frame(server.window, padx=10, pady=10)
+		frameEntry = Frame(server.window, padx=10)
 		frameResultList = Frame(server.window, padx=10, pady=10)
+		frameExtraButtons = Frame(server.window, padx=10, pady=10)
 		frameTitle.pack(side='top', fill='x')
 		frameHospital.pack(side='top', fill='x')
 		frameEntry.pack(side='top', fill='x')
+		frameExtraButtons.pack(side='bottom', fill='both', )
 		frameResultList.pack(side='bottom', fill='both', expand=True)
 
 		# 로고
@@ -56,40 +59,41 @@ class MainWindow:
 		frameSubs = Frame(frameHospital, padx=10, pady=10)
 		frameSubs.grid(row=0, column=3)
 
-		self.emailPhoto = PhotoImage(file='TermProject/Resource/Email.png')
-		self.buttonEmailSendButton = Button(frameSubs, image=self.emailPhoto, command=self.pressedEmail)
 		self.comboBoxHospitalCategory = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(CLCD.keys()))
 		self.comboBoxsubject = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(DGSBJTCD.keys()))
-		self.buttonEmailSendButton.pack(side='top', fill='both', pady=10)
 		self.comboBoxHospitalCategory.pack(side='top', fill='both', pady=20)
 		self.comboBoxsubject.pack(side='top', fill='both', pady=20)
 		self.comboBoxHospitalCategory.current(0)
 		self.comboBoxsubject.current(0)
 
 		# 병원 - 이름
-		Label(frameEntry, font=("나눔고딕코딩", 13), text='병원명').pack(side='left')
-		self.entryHospitalName = Entry(frameEntry, font=("나눔고딕코딩", 13), width=15)
-		self.entryHospitalName.pack(side='left')
+		frameNameSearch = Frame(frameEntry, padx=65, pady=10)
+		frameNameSearch.pack(side='left')
+		self.entryHospitalName = Entry(frameNameSearch, font=("나눔고딕코딩", 13), width=15)
+		self.entryHospitalName.insert(0, "병원 명 입력")
+		self.entryHospitalName.bind('<Button-1>', self.EntryClick)
+		self.entryHospitalName.pack(anchor='center')
+
 
 		# 병원 - 위치
-		frameSubEntry = Frame(frameEntry, padx=10, pady=10)
-		frameSubEntry.pack(side='left', fill='x')
+		#frameSubEntry = Frame(frameEntry, padx=10, pady=10)
+		#frameSubEntry.pack(side='left', fill='x')
 
-		self.entryPosX = Entry(frameSubEntry, font=("나눔고딕코딩", 13), width=15)
-		self.entryPosY = Entry(frameSubEntry, font=("나눔고딕코딩", 13), width=15)
-		Label(frameSubEntry, font=("나눔고딕코딩", 13), text='x').grid(row=0, column=0, pady=10)
-		Label(frameSubEntry, font=("나눔고딕코딩", 13), text='y').grid(row=1, column=0, pady=10)
-		self.entryPosX.grid(row=0, column=1)
-		self.entryPosY.grid(row=1, column=1)
+		#self.entryPosX = Entry(frameSubEntry, font=("나눔고딕코딩", 13), width=15)
+		#self.entryPosY = Entry(frameSubEntry, font=("나눔고딕코딩", 13), width=15)
+		#Label(frameSubEntry, font=("나눔고딕코딩", 13), text='x').grid(row=0, column=0, pady=10)
+		#Label(frameSubEntry, font=("나눔고딕코딩", 13), text='y').grid(row=1, column=0, pady=10)
+		#self.entryPosX.grid(row=0, column=1)
+		#self.entryPosY.grid(row=1, column=1)
 
 		# 병원 - 검색 버튼
-		self.buttonSearch = Button(frameEntry, font=("나눔고딕코딩", 13), text="검색", width=3, height=1, command=self.pressedSearch)
-		self.buttonSearch.pack(side='left', fill='both', padx=10)
+		frameSearch = Frame(frameEntry, padx=10, pady=10, width=250)
+		frameSearch.pack()
+		self.buttonSearch = Button(frameSearch, font=("나눔고딕코딩", 13), text="검색", width=6, height=2, command=self.pressedSearch)
+		self.buttonSearch.pack()
 
 		# 병원 - 지도 버튼
-		self.mapphoto = PhotoImage(file='TermProject/Resource/Map.png')
-		self.buttonMap = Button(frameEntry, image=self.mapphoto, command=self.pressedMap)
-		self.buttonMap.pack(side='left', fill='both', padx=10)
+
 
 		# 결과창
 		self.listboxHospital = Listbox(frameResultList, selectmode='extended', width=30)
@@ -99,10 +103,37 @@ class MainWindow:
 		self.listboxHospital.pack(side='left', fill='both', padx=10)
 		self.listboxPharmacy.pack(side='right', fill='both', padx=10)
 
+		# 버튼들
+		frameLeftRight = Frame(frameExtraButtons)
+		frameEmailMap = Frame(frameExtraButtons)
+		frameLeftRight.pack(side='left', expand=True)
+		frameEmailMap.pack(side='right', expand=True)
+		px = 25
+
+		self.leftImage = PhotoImage(file='TermProject/Resource/Left.png')
+		self.rightImage = PhotoImage(file='TermProject/Resource/Right.png')
+		self.emailPhoto = PhotoImage(file='TermProject/Resource/Email.png')
+		self.mapphoto = PhotoImage(file='TermProject/Resource/Map.png')
+
+		# 좌우 버튼
+		self.buttonGoPerv = Button(frameLeftRight, image=self.leftImage, command=self.pressedPrev)
+		self.buttonGoNext = Button(frameLeftRight, image=self.rightImage, command=self.pressedNext)
+		self.buttonGoPerv.pack(side='left', padx=px)
+		self.buttonGoNext.pack(side='right', padx=px)
+		self.page = 1
+
+		# 이메일, 지도 버튼
+		self.buttonEmailSendButton = Button(frameEmailMap, image=self.emailPhoto, command=self.pressedEmail)
+		self.buttonMap = Button(frameEmailMap, image=self.mapphoto, command=self.pressedMap)
+		self.buttonEmailSendButton.pack(side='left', padx=px)
+		self.buttonMap.pack(side='right', padx=px)
+
+
 		self.hospitalList = []
 		self.pharmacyList = []
 
 		self.lastSelectHospitalIdx = -1
+		self.lastPage = False
 
 		for data in SIDO:
 			if data != '':
@@ -111,6 +142,23 @@ class MainWindow:
 	def mainloop(self):
 		server.window.mainloop()
 
+	def EntryClick(self, event):
+		self.entryHospitalName.delete(0, END)
+
+# prev
+	def pressedPrev(self):
+		if self.listboxHospital.size():
+			# 재검색
+			self.lastSelectHospitalIdx -= 1
+			if self.lastSelectHospitalIdx <= 0:
+				self.lastSelectHospitalIdx = 1
+			self.hospitalSearch()
+
+# next
+	def pressedNext(self):
+		if self.listboxHospital.size() and not self.lastPage:
+			self.lastSelectHospitalIdx += 1
+			self.hospitalSearch()
 
 # 이메일 버튼
 	def pressedEmail(self):
@@ -119,28 +167,34 @@ class MainWindow:
 		# 검색하지 않고 이메일 버튼 누를 경우 예외처리
 		if self.hospitalList == []:
 			tkinter.messagebox.showinfo('오류', '검색을 먼저 해주세요')
-		else:
-			if server.puwindow == None:
-				if self.lastSelectHospitalIdx >= 0:
-					Mail.popupInput(self.hospitalList[self.lastSelectHospitalIdx], self.pharmacyList)
-				else:
-					Mail.popupInput(self.hospitalList, self.pharmacyList)
+			return
+		
+		if server.puwindow == None:
+			if self.lastSelectHospitalIdx >= 0:
+				Mail.popupInput(self.hospitalList[self.lastSelectHospitalIdx], self.pharmacyList)
+			else:
+				Mail.popupInput(self.hospitalList, self.pharmacyList)
 	
 
 # 검색 버튼
 	def pressedSearch(self):
-		self.lastSelectHospitalIdx = -1
+		self.lastSelectHospitalIdx = 1
+		self.hospitalSearch()
+		
+# 진짜 검색
+	def hospitalSearch(self):
 		self.listboxHospital.delete(0, END)
 		self.listboxPharmacy.delete(0, END)
 		if not self.UPMYONDONG:
 			# print("error!!!")
 			pass
 
+		self.lastPage = False
+		
 		# 병원을 검색한다
 		response = search(url=hospital_url, key=hospital_pw, sidoCd=str(SIDO[self.SIDO] * 10000),
 			sgguCd=str(SIGUNGU[self.SIGUNGU]), emdongNm=self.UPMYONDONG, yadmNm=self.entryHospitalName.get(), 
-			clCd=CLCD[self.comboBoxHospitalCategory.get()], dgsbjtCd=DGSBJTCD[self.comboBoxsubject.get()],
-			xPos=self.entryPosX.get(), yPos=self.entryPosY.get())
+			clCd=CLCD[self.comboBoxHospitalCategory.get()], dgsbjtCd=DGSBJTCD[self.comboBoxsubject.get()], page=str(self.lastSelectHospitalIdx))
 
 		self.hospitalList.clear()
 
@@ -157,6 +211,11 @@ class MainWindow:
 			hospital.getInfo(item)
 			self.hospitalList.append(hospital)		
 		
+		# 비어있다면
+		if not self.listboxHospital.size():
+			self.listboxHospital.insert(END, "마지막 입니다.")
+			self.lastPage = True
+
 		# 그래프 출력 + 예외처리
 		if self.comboBoxsubject.get() == '선택안함' and self.comboBoxHospitalCategory.get() == '선택안함' and self.hospitalList != []:
 			Graph.Graph(self.hospitalList)	
@@ -265,7 +324,7 @@ class MainWindow:
 		# 약국 검색
 		response = search(url=pharmacy_url, key=pharmacy_pw, 
 			sidoCd=str(SIDO[self.SIDO] * 10000), sgguCd=str(SIGUNGU[self.SIGUNGU]), 
-			xPos=pos[0], yPos=pos[1], radius=1000)
+			xPos=pos[0], yPos=pos[1], radius=1000, numOfRows='500')
 
 		# 리스트에 붙여넣는다
 		from xml.etree import ElementTree
@@ -279,10 +338,12 @@ class MainWindow:
 
 		self.pharmacyList.sort(key=lambda x : x.distance)
 
-		for i in range(len(self.pharmacyList)):
-			if i >= 10:
-				break
-			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + self.pharmacyList[i].yadmNm)
+		while len(self.pharmacyList) > 10:
+			self.pharmacyList.pop()
+
+		for i, pharmacy in enumerate(self.pharmacyList):
+			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + pharmacy.yadmNm)
+		
 
 
 # 약국 이름 선택
@@ -306,7 +367,7 @@ class MainWindow:
 		pass
 
 
-def search(url, key, page='1', numOfRows='100', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
+def search(url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
 	# 병원을 검색한다
 	import requests
 	params = {
