@@ -167,14 +167,14 @@ class MainWindow:
 				if i == 0:
 					self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
 					i += 1
-				else:
-					# 선택한 병원만 색을 다르게 표시
-					if name == self.hospitalList[select].yadmNm:
-						color = 'red'
-						icon = 'flag'
-						folium.Marker([posx, posy], popup=name, icon=folium.Icon(color=color, icon=icon)).add_to(self.map_osm)
-					else:	
-						folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
+				
+				# 선택한 병원만 색을 다르게 표시
+				if name == self.hospitalList[select].yadmNm:
+					color = 'red'
+					icon = 'flag'
+					folium.Marker([posx, posy], popup=name, icon=folium.Icon(color=color, icon=icon)).add_to(self.map_osm)
+				else:	
+					folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
 		
 		# 지도에 약국과 선택한 병원만 표시
 		else:
@@ -230,7 +230,8 @@ class MainWindow:
 		self.listBoxUPMYONDONG.delete(0, END)
 
 		# 읍면동 리스트박스 갱신
-		pass
+		for data in UPMYONDONG[self.SIGUNGU]:
+			self.listBoxUPMYONDONG.insert(END, data)
 
 
 # 읍면동 선택
