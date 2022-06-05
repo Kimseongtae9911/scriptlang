@@ -155,8 +155,7 @@ class MainWindow:
 		i = 0
 
 		# 선택된 것이 병원이라면
-		if self.listboxHospital.curselection():
-			select = self.listboxHospital.curselection()[0]
+		if self.listboxHospital.curselection() == ():
 			for hospital in self.hospitalList:
 				name = hospital.yadmNm
 				posy, posx = hospital.pos
@@ -168,13 +167,8 @@ class MainWindow:
 					self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
 					i += 1
 				
-				# 선택한 병원만 색을 다르게 표시
-				if name == self.hospitalList[select].yadmNm:
-					color = 'red'
-					icon = 'flag'
-					folium.Marker([posx, posy], popup=name, icon=folium.Icon(color=color, icon=icon)).add_to(self.map_osm)
-				else:	
-					folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
+				icon = 'plus'
+				folium.Marker([posx, posy], popup=name, icon=folium.Icon(icon=icon)).add_to(self.map_osm)
 		
 		# 지도에 약국과 선택한 병원만 표시
 		else:
@@ -187,7 +181,6 @@ class MainWindow:
 				folium.Marker([posx, posy], popup=name, icon=folium.Icon(color=color, icon=icon)).add_to(self.map_osm)
 				
 			# 지도에 약국 표시
-			select = self.listboxPharmacy.curselection()[0]
 			for pharmacy in self.pharmacyList:
 				name = pharmacy.yadmNm
 				posy, posx = pharmacy.pos
