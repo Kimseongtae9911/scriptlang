@@ -147,27 +147,40 @@ class MainWindow:
 		# 선택한 것이 있다면 선택한 병원과 약국만 표시
 		# 없다면 리스트의 모든 병원 표시
 
+		# 리스트의 모든 병원
 		if self.listboxHospital.selection_get() in SIGUNGU or self.listboxHospital.selection_get() in UPMYONDONG:
-			pass
-		print(self.listboxHospital.selection_get())
-		for i in range(self.listboxHospital.size() - 1):
-			name = self.listboxHospital.get(i)
-			posy, posx = self.hospitalPoint[name]		
-			if i == 0:
-				self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
-			# 좌표없는 병원들 예외처리
-			if posx == -1 or posy == -1:
-				pass
-			else:
-				# 선택한 병원만 색을 다르게 표시
-				if name == self.listboxHospital.selection_get():
-					color = 'red'
-					icon = 'flag'
-					folium.Marker([posx, posy], popup=name, icon=folium.Icon(color=color, icon=icon)).add_to(self.map_osm)
-				else:	
+			for i in range(self.listboxHospital.size() - 1):
+				name = self.listboxHospital.get(i)
+				posy, posx = self.hospitalPoint[name]		
+				if posx == -1 or posy == -1:	# 좌표없는 병원들 예외처리
+					continue
+				if i == 0:
+					self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
+				else:
 					folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
-		
-		# 지도에 약국 표시
+		# 선택한 병원과 약국
+		else:
+			for i in range(self.listboxHospital.size() - 1):
+				name = self.listboxHospital.get(i)
+				posy, posx = self.hospitalPoint[name]		
+				if posx == -1 or posy == -1:	# 좌표없는 병원들 예외처리
+					continue
+				else:
+					if name == self.listboxHospital.selection_get():
+						color = 'red'
+						icon = 'plus'
+						self.map_osm = folium.Map(location=[posx, posy], zoom_start=20)
+						folium.Marker([posx, posy], popup=name, icon=folium.Icon(color=color, icon=icon)).add_to(self.map_osm)
+						break
+			# 지도에 약국 표시
+			for i in range(self.listboxPharmacy.size() - 1):
+				name = self.listboxPharmacy.get(i)
+				posy, posx = self.pharmacyPoint[name]
+				if posx == -1 or posy == -1:	# 좌표없는 병원들 예외처리
+					continue
+				else:
+					icon = 'flag'
+					folium.Marker([posx, posy], popup=name, icon=folium.Icon(icon=icon)).add_to(self.map_osm)
 
 
 		self.map_osm.save('osm.html')
