@@ -32,6 +32,7 @@ class YahtzeeBoard:
 
     def InitGame(self): #player window 생성하고 최대 10명까지 플레이어 설정
         self.pwindow = Tk()
+        self.pwindow.title = "Player Setting"
         self.TempFont = font.Font(size=12, weight='bold', family='Consolas')
         self.label = []
         self.entry = []
@@ -58,6 +59,7 @@ class YahtzeeBoard:
 
     def makeInterface(self): 
         self.window = Tk("Yahtzee Game")
+        self.window.title = "Yahtzee Game"
         self.TempFont = font.Font(size=12, weight='bold', family='Consolas')
         
         for i in range(5): #Dice 객체 5개 생성
