@@ -2,8 +2,10 @@ import Server as server
 from tkinter import *
 from tkinter import ttk
 from locationDict import *
+from InfoClass import *
 import folium
 import webbrowser
+
 
 hospital_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
 pharmacy_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
@@ -62,11 +64,6 @@ class MainWindow:
 		self.comboBoxHospitalCategory.current(0)
 		self.comboBoxsubject.current(0)
 
-		# 병원 - 이름
-		Label(frameEntry, font=("나눔고딕코딩", 13), text='병원명').pack(side='left')
-		self.entryHospitalName = Entry(frameEntry, font=("나눔고딕코딩", 13), width=15)
-		self.entryHospitalName.pack(side='left')
-
 		# 병원 - 위치
 		frameSubEntry = Frame(frameEntry, padx=10, pady=10)
 		frameSubEntry.pack(side='left', fill='x')
@@ -77,6 +74,11 @@ class MainWindow:
 		Label(frameSubEntry, font=("나눔고딕코딩", 13), text='y').grid(row=1, column=0, pady=10)
 		self.entryPosX.grid(row=0, column=1)
 		self.entryPosY.grid(row=1, column=1)
+
+		# 병원 - 이름
+		Label(frameEntry, font=("나눔고딕코딩", 13), text='병원명').pack(side='left')
+		self.entryHospitalName = Entry(frameEntry, font=("나눔고딕코딩", 13), width=15)
+		self.entryHospitalName.pack(side='left')
 
 		# 병원 - 검색 버튼
 		self.buttonSearch = Button(frameEntry, font=("나눔고딕코딩", 13), text="검색", width=3, height=1, command=self.pressedSearch)
@@ -91,13 +93,12 @@ class MainWindow:
 		self.listboxHospital = Listbox(frameResultList, selectmode='extended', width=30)
 		self.listboxHospital.bind('<<ListboxSelect>>', self.hospitalSelect)
 		self.listboxPharmacy = Listbox(frameResultList, selectmode='extended', width=30)
+		self.listboxPharmacy.bind('<<ListboxSelect>>', self.pharmacySelect)
 		self.listboxHospital.pack(side='left', fill='both', padx=10)
 		self.listboxPharmacy.pack(side='right', fill='both', padx=10)
 
-
-
-		self.hospitalPoint = {}
-		self.pharmacyPoint = {}
+		self.hospitalList = []
+		self.pharmacyList = []
 
 		for data in SIDO:
 			if data != '':
@@ -128,37 +129,51 @@ class MainWindow:
 			zipCd=ZIPCODE[self.comboBoxHospitalCategory.get()], clCd=CLCODE[self.comboBoxsubject.get()],
 			xPos=self.entryPosX.get(), yPos=self.entryPosY.get())
 
-		self.hospitalPoint.clear()
+		self.hospitalList.clear()
 
 		# 리스트에 붙여넣는다
 		from xml.etree import ElementTree
 		HospitalTree = ElementTree.fromstring(response.content)
 		hospitalElememt = HospitalTree.iter("item")
+		cnt = 1
 		for item in hospitalElememt:
 			strTitle = item.find("yadmNm")
-			self.listboxHospital.insert(END, strTitle.text)
-			pos = (item.find("XPos").text, item.find("YPos").text)
-			self.hospitalPoint[strTitle.text] = pos
+			self.listboxHospital.insert(END, "[{:}]: ".format(cnt) + strTitle.text)
+			self.hospitalList.append(Hospital())
+			self.hospitalList[cnt - 1].getInfo(item)
+			cnt += 1
 
 
 # 지도 버튼 
 	def pressedMap(self):
 		onlyname = self.listboxHospital.get(0)
 		if onlyname == '':
-			print('only one')
-			posy, posx = self.hospitalPoint[onlyname]
-			self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
-			folium.Marker([posx, posy], popup=onlyname).add_to(self.map_osm)
+			# empty
+			print("empty list, cant map")
+			return
 		else:
 			print('many hospital')
-			for i in range(self.listboxHospital.size() - 1):
-				name = self.listboxHospital.get(i)
-				posy, posx = self.hospitalPoint[name]
-				print(posy)
-				print(posx)
+			# 병원 출력
+			for i in range(self.listboxHospital.size()):
+				posy, posx = self.hospitalList[i].pos
+				name = self.hospitalList[i].yadmNm
 				if i == 0:
-					self.map_osm = folium.Map(location=[posx, posy], zoom_start=13)
-				folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
+					self.map_osm = folium.Map(location=[posx, posy], zoom_start=15)
+	
+				# 선택된 병원인가?
+				if self.listboxHospital.curselection() and i == self.listboxHospital.curselection()[0]:
+					folium.Marker([posx, posy], popup=name, icon=(folium.Icon(color='red'))).add_to(self.map_osm)
+				else:
+					folium.Marker([posx, posy], popup=name).add_to(self.map_osm)
+			
+			# 약국 출력
+			for i in range(len(self.pharmacyList)):
+				if i >= 10: break
+
+				posy, posx = self.pharmacyList[i].pos
+				name = self.pharmacyList[i].yadmNm
+				folium.Marker([posx, posy], popup=name, icon=(folium.Icon(color='lightgreen'))).add_to(self.map_osm)
+
 		
 		self.map_osm.save('osm.html')
 		webbrowser.open_new('osm.html')
@@ -206,8 +221,8 @@ class MainWindow:
 
 # 병원 이름 선택
 	def hospitalSelect(self, event):
-		for i in range(self.listboxHospital.size()):
-			print(self.listboxHospital.get(i))
+		# for i in range(self.listboxHospital.size()):
+		# 	print(self.listboxHospital.get(i))
 
 		if not self.listboxHospital.curselection():
 			print("empty hospital list")
@@ -215,7 +230,8 @@ class MainWindow:
 		#print(self.listboxHospital.curselection())
 		#print(self.listboxHospital.selection_get())
 		self.listboxPharmacy.delete(0, END)
-		pos = self.hospitalPoint[self.listboxHospital.selection_get()]
+		self.pharmacyList.clear()
+		pos = self.hospitalList[self.listboxHospital.curselection()[0]].pos
 
 		# 약국 검색
 		response = search(url=pharmacy_url, key=pharmacy_pw, 
@@ -226,11 +242,29 @@ class MainWindow:
 		from xml.etree import ElementTree
 		pharmacyTree = ElementTree.fromstring(response.content)
 		pharmacyElement = pharmacyTree.iter("item")
+		cnt = 0
 		for item in pharmacyElement:
-			strTitle = item.find("yadmNm")
-			self.listboxPharmacy.insert(END, strTitle.text)
-			pos = (item.find("XPos").text, item.find("YPos").text)
-			self.pharmacyPoint[strTitle.text] = pos
+			self.pharmacyList.append(Pharmacy())
+			self.pharmacyList[cnt].getInfo(item)
+			cnt += 1
+
+		self.pharmacyList.sort(key=lambda x : x.distance)
+
+		for i in range(len(self.pharmacyList)):
+			if i >= 10:
+				break;
+			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + self.pharmacyList[i].yadmNm)
+
+
+# 약국 이름 선택
+	def pharmacySelect(self, event):
+		if not self.listboxPharmacy.curselection():
+			return
+
+		cur = self.listboxPharmacy.curselection()[0]
+		print(cur)
+		print(self.pharmacyList[cur].distance)
+		pass
 
 
 	def testSetting(self):
@@ -244,7 +278,7 @@ class MainWindow:
 		pass
 
 
-def search(url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
+def search(url, key, page='	1', numOfRows='1000', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
 	# 병원을 검색한다
 	import requests
 	params = {
@@ -258,5 +292,4 @@ def search(url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm=''
 if __name__ == '__main__':
 	hospital = MainWindow()
 	hospital.mainloop()
-
 

@@ -19,7 +19,8 @@ class Mail():
     # 메일 입력받기
     def inputMail():
         Mail.fromAddr = Mail.inputEmail.get()
-        Mail.password = Mail.inputEmail2.get()
+        # Mail.password = Mail.inputEmail2.get()
+        Mail.password = 'wrmdfixlprydcjfh'
         Mail.toAddr = Mail.inputEmail3.get()
 
         # 나중에 병원정보 보낼 때는 MULTIPART이용
