@@ -8,6 +8,7 @@ from InfoClass import *
 import folium
 import webbrowser
 import Graph
+import cstr
 
 
 hospital_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
@@ -213,7 +214,7 @@ class MainWindow:
 		
 		# 비어있다면
 		if not self.listboxHospital.size():
-			self.listboxHospital.insert(END, "마지막 입니다.")
+			self.listboxHospital.insert(END, cstr.endOfList())
 			self.lastPage = True
 
 		# 그래프 출력 + 예외처리
@@ -341,7 +342,7 @@ class MainWindow:
 		while len(self.pharmacyList) > 10:
 			self.pharmacyList.pop()
 
-		for i, pharmacy in enumerate(self.pharmacyList):
+		for i,pharmacy in enumerate(self.pharmacyList):
 			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + pharmacy.yadmNm)
 		
 
