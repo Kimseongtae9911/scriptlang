@@ -39,11 +39,11 @@ class MainWindow:
 
 		# 로고
 		img = (Image.open('TermProject/Resource/Title.png'))
-		titleImage = img.resize((250, 90), Image.ANTIALIAS)
+		titleImage = img.resize((300, 70))
 		self.titleImage = ImageTk.PhotoImage(titleImage)
-		self.canvas = Canvas(frameTitle, width=480, height=100, bg='#2F455C')
+		self.canvas = Canvas(frameTitle, width=480, height=100, bg='#2F455C', relief=RIDGE, borderwidth=5)
 		self.canvas.pack()
-		self.canvas.create_image(240, 45, anchor='center', image=self.titleImage)
+		self.canvas.create_image(240, 53, anchor='center', image=self.titleImage)
 		# self.title = Label(frameTitle, image=self.titleImage, width=480, height=40)
 		# self.title.pack()
 
@@ -51,9 +51,9 @@ class MainWindow:
 		self.SIDO = ''
 		self.SIGUNGU = ''
 		self.UPMYONDONG = ''
-		self.listBoxSIDO = Listbox(frameHospital, selectmode='extended', height=10, width=13)
-		self.listBoxSIGUNGU = Listbox(frameHospital, selectmode='extended', height=10, width=13)
-		self.listBoxUPMYONDONG = Listbox(frameHospital, selectmode='extended', height=10, width=13)
+		self.listBoxSIDO = Listbox(frameHospital, selectmode='extended', height=10, width=13, highlightthickness=3, highlightbackground='#97A2AE')
+		self.listBoxSIGUNGU = Listbox(frameHospital, selectmode='extended', height=10, width=13, highlightthickness=3, highlightbackground='#97A2AE')
+		self.listBoxUPMYONDONG = Listbox(frameHospital, selectmode='extended', height=10, width=13, highlightthickness=3, highlightbackground='#97A2AE')
 		self.listBoxSIDO.bind('<<ListboxSelect>>', self.SIDOSelect)
 		self.listBoxSIGUNGU.bind('<<ListboxSelect>>', self.SIGUNGUSelect)
 		self.listBoxUPMYONDONG.bind('<<ListboxSelect>>', self.UPMYONDONGSelect)
@@ -73,9 +73,9 @@ class MainWindow:
 		self.comboBoxsubject.current(0)
 
 		# 병원 - 이름
-		frameNameSearch = Frame(frameEntry, padx=65, pady=10, bg='#2F455C')
+		frameNameSearch = Frame(frameEntry, padx=10, pady=10, bg='#2F455C')
 		frameNameSearch.pack(side='left')
-		self.entryHospitalName = Entry(frameNameSearch, font=("나눔고딕코딩", 13), width=15)
+		self.entryHospitalName = Entry(frameNameSearch, font=("나눔고딕코딩", 13), width=25, borderwidth=5)
 		self.entryHospitalName.insert(0, "병원 명 입력")
 		self.entryHospitalName.bind('<Button-1>', self.EntryClick)
 		self.entryHospitalName.pack(anchor='center')
@@ -93,9 +93,9 @@ class MainWindow:
 		#self.entryPosY.grid(row=1, column=1)
 
 		# 병원 - 검색 버튼
-		frameSearch = Frame(frameEntry, padx=10, pady=10, width=250, bg='#2F455C')
+		frameSearch = Frame(frameEntry, padx=15, pady=10, width=250, bg='#2F455C')
 		frameSearch.pack()
-		self.buttonSearch = Button(frameSearch, font=("나눔고딕코딩", 13), text="검색", width=6, height=2, command=self.pressedSearch)
+		self.buttonSearch = Button(frameSearch, font=("나눔고딕코딩", 13), text="검색", width=6, height=2, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedSearch)
 		self.buttonSearch.pack()
 
 		# 결과창
@@ -119,15 +119,15 @@ class MainWindow:
 		self.mapphoto = PhotoImage(file='TermProject/Resource/Map.png')
 
 		# 좌우 버튼
-		self.buttonGoPerv = Button(frameLeftRight, image=self.leftImage, command=self.pressedPrev)
-		self.buttonGoNext = Button(frameLeftRight, image=self.rightImage, command=self.pressedNext)
+		self.buttonGoPerv = Button(frameLeftRight, image=self.leftImage, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedPrev)
+		self.buttonGoNext = Button(frameLeftRight, image=self.rightImage, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedNext)
 		self.buttonGoPerv.pack(side='left', padx=px)
 		self.buttonGoNext.pack(side='right', padx=px)
 		self.page = 1
 
 		# 이메일, 지도 버튼
-		self.buttonEmailSendButton = Button(frameEmailMap, image=self.emailPhoto, command=self.pressedEmail)
-		self.buttonMap = Button(frameEmailMap, image=self.mapphoto, command=self.pressedMap)
+		self.buttonEmailSendButton = Button(frameEmailMap, image=self.emailPhoto, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedEmail)
+		self.buttonMap = Button(frameEmailMap, image=self.mapphoto, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedMap)
 		self.buttonEmailSendButton.pack(side='left', padx=px)
 		self.buttonMap.pack(side='right', padx=px)
 
