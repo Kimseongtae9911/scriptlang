@@ -212,10 +212,15 @@ class MainWindow:
 			hospital.getInfo(item)
 			self.hospitalList.append(hospital)		
 		
+
 		# 비어있다면
 		if not self.listboxHospital.size():
 			self.listboxHospital.insert(END, cstr.endOfList())
 			self.lastPage = True
+		else:
+			while self.listboxHospital.size() < 20:
+				self.listboxHospital.insert(END, "")
+			self.listboxHospital.insert(END, "                    [{:}] ".format(self.lastSelectHospitalIdx))
 
 		# 그래프 출력 + 예외처리
 		if self.comboBoxsubject.get() == '선택안함' and self.comboBoxHospitalCategory.get() == '선택안함' and self.hospitalList != []:
@@ -371,6 +376,8 @@ class MainWindow:
 def search(url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
 	# 병원을 검색한다
 	import requests
+	if yadmNm == '병원 명 입력':
+		yadmNm = ''
 	params = {
 		'serviceKey' : key, 'pageNo' : page, 'numOfRows' : numOfRows, 'sidoCd' : sidoCd, 
 		'sgguCd' : sgguCd, 'emdongNm' : emdongNm, 'yadmNm' : yadmNm, 'zipCd' : zipCd, 
