@@ -9,7 +9,7 @@ import folium
 import webbrowser
 import Graph
 import cstr
-
+from PIL import Image, ImageTk
 
 hospital_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
 pharmacy_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
@@ -22,15 +22,15 @@ class MainWindow:
 	def __init__(self):
 		# 창 기본 설정
 		self.width = 500
-		self.height = 700
+		self.height = 800
 		server.window.title("Hospital")
-		server.window.geometry("" + str(self.width) + "x" + str(self.height))
+		server.window.geometry("" + str(self.width) + "x" + str(self.height))		
 
-		frameTitle = Frame(server.window, padx=10, pady=10,)
-		frameHospital = Frame(server.window, padx=10, pady=10)
-		frameEntry = Frame(server.window, padx=10)
-		frameResultList = Frame(server.window, padx=10, pady=10)
-		frameExtraButtons = Frame(server.window, padx=10, pady=10)
+		frameTitle = Frame(server.window, padx=10, pady=10, bg='#2F455C')
+		frameHospital = Frame(server.window, padx=10, pady=10, bg='#2F455C')
+		frameEntry = Frame(server.window, padx=10, bg='#2F455C')
+		frameResultList = Frame(server.window, padx=10, pady=10, bg='#2F455C')
+		frameExtraButtons = Frame(server.window, padx=10, pady=10, bg='#2F455C')
 		frameTitle.pack(side='top', fill='x')
 		frameHospital.pack(side='top', fill='x')
 		frameEntry.pack(side='top', fill='x')
@@ -38,9 +38,14 @@ class MainWindow:
 		frameResultList.pack(side='bottom', fill='both', expand=True)
 
 		# 로고
-		self.canvas = Canvas(frameTitle,  bg = "green", width=480, height=40)
-		self.canvas.create_text(240, 20, anchor='center', text='로고', fill='black', font=("나눔고딕코딩", 13))
+		img = (Image.open('TermProject/Resource/Title.png'))
+		titleImage = img.resize((250, 90), Image.ANTIALIAS)
+		self.titleImage = ImageTk.PhotoImage(titleImage)
+		self.canvas = Canvas(frameTitle, width=480, height=100, bg='#2F455C')
 		self.canvas.pack()
+		self.canvas.create_image(240, 45, anchor='center', image=self.titleImage)
+		# self.title = Label(frameTitle, image=self.titleImage, width=480, height=40)
+		# self.title.pack()
 
 		# 병원 카테고리 - 지역
 		self.SIDO = ''
@@ -57,7 +62,7 @@ class MainWindow:
 		self.listBoxUPMYONDONG.grid(row=0, column=2, padx=10)
 
 		# 병원 카테고리 - 병원 종류
-		frameSubs = Frame(frameHospital, padx=10, pady=10)
+		frameSubs = Frame(frameHospital, padx=10, pady=10, bg='#2F455C')
 		frameSubs.grid(row=0, column=3)
 
 		self.comboBoxHospitalCategory = ttk.Combobox(frameSubs, font=("나눔고딕코딩", 13), width=10, values=list(CLCD.keys()))
@@ -68,7 +73,7 @@ class MainWindow:
 		self.comboBoxsubject.current(0)
 
 		# 병원 - 이름
-		frameNameSearch = Frame(frameEntry, padx=65, pady=10)
+		frameNameSearch = Frame(frameEntry, padx=65, pady=10, bg='#2F455C')
 		frameNameSearch.pack(side='left')
 		self.entryHospitalName = Entry(frameNameSearch, font=("나눔고딕코딩", 13), width=15)
 		self.entryHospitalName.insert(0, "병원 명 입력")
@@ -88,13 +93,10 @@ class MainWindow:
 		#self.entryPosY.grid(row=1, column=1)
 
 		# 병원 - 검색 버튼
-		frameSearch = Frame(frameEntry, padx=10, pady=10, width=250)
+		frameSearch = Frame(frameEntry, padx=10, pady=10, width=250, bg='#2F455C')
 		frameSearch.pack()
 		self.buttonSearch = Button(frameSearch, font=("나눔고딕코딩", 13), text="검색", width=6, height=2, command=self.pressedSearch)
 		self.buttonSearch.pack()
-
-		# 병원 - 지도 버튼
-
 
 		# 결과창
 		self.listboxHospital = Listbox(frameResultList, selectmode='extended', width=30)
@@ -105,8 +107,8 @@ class MainWindow:
 		self.listboxPharmacy.pack(side='right', fill='both', padx=10)
 
 		# 버튼들
-		frameLeftRight = Frame(frameExtraButtons)
-		frameEmailMap = Frame(frameExtraButtons)
+		frameLeftRight = Frame(frameExtraButtons, bg='#2F455C')
+		frameEmailMap = Frame(frameExtraButtons, bg='#2F455C')
 		frameLeftRight.pack(side='left', expand=True)
 		frameEmailMap.pack(side='right', expand=True)
 		px = 25
@@ -368,7 +370,7 @@ class MainWindow:
 		pass
 
 
-def search(url, key, page='1', numOfRows='10', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
+def search(url, key, page='1', numOfRows='20', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
 	# 병원을 검색한다
 	import requests
 	params = {
