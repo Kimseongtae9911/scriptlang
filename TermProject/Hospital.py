@@ -99,9 +99,9 @@ class MainWindow:
 		self.buttonSearch.pack()
 
 		# 결과창
-		self.listboxHospital = Listbox(frameResultList, selectmode='extended', width=30)
+		self.listboxHospital = Listbox(frameResultList, selectmode='extended', width=30, highlightthickness=3, highlightbackground='#97A2AE')
 		self.listboxHospital.bind('<<ListboxSelect>>', self.hospitalSelect)
-		self.listboxPharmacy = Listbox(frameResultList, selectmode='extended', width=30)
+		self.listboxPharmacy = Listbox(frameResultList, selectmode='extended', width=30, highlightthickness=3, highlightbackground='#97A2AE')
 		self.listboxPharmacy.bind('<<ListboxSelect>>', self.pharmacySelect)
 		self.listboxHospital.pack(side='left', fill='both', padx=10)
 		self.listboxPharmacy.pack(side='right', fill='both', padx=10)
@@ -293,6 +293,7 @@ class MainWindow:
 			if SIDO[self.SIDO] != '' and SIDO[self.SIDO] == SIGUNGU[data] // 10000:
 				self.listBoxSIGUNGU.insert(END, data)
 
+		MainWindow.SortSIGUNGU(self)
 
 # 시군구 선택
 	def SIGUNGUSelect(self, event):
@@ -307,6 +308,8 @@ class MainWindow:
 		# 읍면동 리스트박스 갱신
 		for data in UPMYONDONG[self.SIGUNGU]:
 			self.listBoxUPMYONDONG.insert(END, data)
+
+		MainWindow.SortUPMYONDONG(self)
 
 
 # 읍면동 선택
@@ -351,8 +354,6 @@ class MainWindow:
 
 		for i,pharmacy in enumerate(self.pharmacyList):
 			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + pharmacy.yadmNm)
-		
-
 
 # 약국 이름 선택
 	def pharmacySelect(self, event):
@@ -363,17 +364,74 @@ class MainWindow:
 		print(cur)
 		print(self.pharmacyList[cur].distance)
 		pass
+	
+# 시군구 정렬
+	def SortSIGUNGU(self):
+		si = []
+		gun = []
+		gu = []
+		rest = []
+		for data in range(self.listBoxSIGUNGU.size()):
+			if self.listBoxSIGUNGU.get(data)[-1] == '시':
+				si.append(self.listBoxSIGUNGU.get(data))		
+			elif self.listBoxSIGUNGU.get(data)[-1] == '군':
+				gun.append(self.listBoxSIGUNGU.get(data))
+			elif self.listBoxSIGUNGU.get(data)[-1] == '구':
+				gu.append(self.listBoxSIGUNGU.get(data))
+			else:
+				rest.append(self.listBoxSIGUNGU.get(data))
+		si.sort()
+		gun.sort()
+		gu.sort()
+		rest.sort()
 
-	def testSetting(self):
-		self.listBoxSIGUNGU.insert(END, "시흥시")
-		self.listBoxSIGUNGU.insert(END, "asdf")
-		self.listBoxSIGUNGU.insert(END, "zxcv")
+		self.listBoxSIGUNGU.delete(0, END)
+		for data in si:
+			self.listBoxSIGUNGU.insert(END, data)
+		for data in gun:
+			self.listBoxSIGUNGU.insert(END, data)
+		for data in gu:
+			self.listBoxSIGUNGU.insert(END, data)
+		for data in rest:
+			self.listBoxSIGUNGU.insert(END, data)
 
-		self.listBoxUPMYONDONG.insert(END, "정왕동")
-		self.listBoxUPMYONDONG.insert(END, "456")
-		self.listBoxUPMYONDONG.insert(END, "789")
-		pass
+# 읍면동 정렬
+	def SortUPMYONDONG(self):
+		# 동 가 읍 면
+		dong = []
+		ga = []
+		up = []
+		myon = []
+		rest = []
+		for data in range(self.listBoxUPMYONDONG.size()):
+			if self.listBoxUPMYONDONG.get(data)[-1] == '읍':
+				up.append(self.listBoxUPMYONDONG.get(data))
+			elif self.listBoxUPMYONDONG.get(data)[-1] == '면':
+				myon.append(self.listBoxUPMYONDONG.get(data))
+			elif self.listBoxUPMYONDONG.get(data)[-1] == '동':
+				dong.append(self.listBoxUPMYONDONG.get(data))
+			elif self.listBoxUPMYONDONG.get(data)[-1] == '가':
+				ga.append(self.listBoxUPMYONDONG.get(data))
+			else:
+				rest.append(self.listBoxUPMYONDONG.get(data))
 
+		dong.sort()
+		ga.sort()
+		up.sort()
+		myon.sort()
+		rest.sort()
+		self.listBoxUPMYONDONG.delete(0, END)
+		for data in up:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in myon:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in dong:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in ga:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in rest:
+			self.listBoxUPMYONDONG.insert(END, data)
+		
 
 def search(url, key, page='1', numOfRows='20', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
 	# 병원을 검색한다
