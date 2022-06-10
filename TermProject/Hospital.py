@@ -22,7 +22,7 @@ class MainWindow:
 	def __init__(self):
 		# 창 기본 설정
 		self.width = 500
-		self.height = 800
+		self.height = 810
 		server.window.title("Hospital")
 		server.window.geometry("" + str(self.width) + "x" + str(self.height))		
 

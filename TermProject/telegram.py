@@ -1,12 +1,15 @@
 import time
 import sqlite3
+from urllib import response
 import telepot
 from pprint import pprint
 from urllib.request import urlopen
 import re
 from datetime import date, datetime
 
-import Hospital
+import Hospital as main
+from InfoClass import Hospital
+from TermProject.InfoClass import Pharmacy
 
 bot = telepot.Bot("5595829384:AAGCIPcSZZG5MD62bvve8GAd3X7g6CTBgYE")
 
@@ -14,70 +17,78 @@ bot.sendMessage("5460751414", "hello")
 
 key = '5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=='
 
-def replyAptData(date_param, user, loc_param='11710'): 
-	print(user, date_param, loc_param) 
-	res_list = noti.getData( loc_param, date_param )
-
-	msg = '' 
-	for r in res_list: 
-		print( str(datetime.now()).split('.')[0], r )
-
-		if len(r+msg)+1>noti.MAX_MSG_LENGTH: 
-			noti.sendMessage( user, msg ) 
-			msg = r+'\n' 
-		else: 
-			msg += r+'\n'
-
-	if msg: 
-		noti.sendMessage( user, msg ) 
-	else: 
-		noti.sendMessage( user, '%s 기간에 해당하는 데이터가 없습니다.'%date_param)
-
-def save( user, loc_param ): 
-	conn = sqlite3.connect('users.db') 
-	cursor = conn.cursor() 
-	cursor.execute('CREATE TABLE IF NOT EXISTS \ users( user TEXT, location TEXT, PRIMARY KEY(user, location) )')
-
-	try: 
-		cursor.execute('INSERT INTO users(user, location) VALUES ("%s", "%s")' % (user, loc_param)) 
-	except sqlite3.IntegrityError: 
-		noti.sendMessage( user, '이미 해당 정보가 저장되어 있습니다.' ) 
-		return
-	else: noti.sendMessage( user, '저장되었습니다.' ) 
-	conn.commit()
-
-
-def check( user ): 
-	conn = sqlite3.connect('users.db')
-	cursor = conn.cursor() 
-	cursor.execute('CREATE TABLE IF NOT EXISTS users( user TEXT, locationTEXT, PRIMARY KEY(user, location) )') 
-	cursor.execute('SELECT * from users WHERE user="%s"' % user)
-	for data in cursor.fetchall(): 
-		row = 'id:' + str(data[0]) + ', location:' + data[1] 
-		noti.sendMessage( user, row )
 
 
 def handle(msg): 
 	content_type, chat_type, chat_id = telepot.glance(msg)
 	if content_type != 'text': 
-		noti.sendMessage(chat_id, '난 텍스트 이외의 메시지는 처리하지 못해요.') 
+		sendMessage(chat_id, '난 텍스트 이외의 메시지는 처리하지 못해요.') 
 		return
 	
 	text = msg['text'] 
 	args = text.split(' ')
 
 	if len(args) >= 2 and args[0].endswith("동"):
-		Hospital.search(sidoCd='', sgguCd='', emdongNm=args[0], yadmNm=args[1])
+		res = searchHospital(args[0], args[1])
+
+		if len(res):
+			respond = "============병원 정보============\n"
+			for hos in res:
+				respond += "병원 명 : " + hos.yadmNm + ', ' + hos.yadmNm + '\n'
+				respond += "주소 : " + hos.addr + '\n'
+				respond += "전화번호 : " + hos.telno + '\n\n'
+				respond += '---주변 약국--\n'
+
+			
+
+			sendMessage(chat_id, respond)
+		else:
+			sendMessage(chat_id, '잘못된 병원명 혹은 동 입니다!')
 
 
 	else:
-		 noti.sendMessage(chat_id, '''모르는 명령어입니다.\n거래 [YYYYMM] [지역번호]\n
-		 지역 [지역번호]\n저장 [지역번호]\n확인 중 하나의 명령을 입력하세요.\n 
-		 지역 ["종로구 11110", "중구 11140", "용산구 11170", "성동구 11200", "광진구11215", "동대문구 11230", 
-		 "중랑구 11260", "성북구 11290", "강북구 11305", "도봉구 11320", "노원구 11350", "은평구 11380", 
-		 "서대문구 11410", "마포구11440", "양천구 11470", "강서구 11500", "구로구 11530", "금천구 11545", 
-		 "영등포구 11560", "동작구 11590", "관악구 11620", "서초구 11650", "강남구11680", "송파구 11710", "강동구 11740"]''')
+		 sendMessage(chat_id, '''모르는 명령어입니다.\n
+		[동(읍면) 병원명]을 입력해주세요
+		예시) 정왕동 시화병원.''')
 
+
+def searchHospital(dong, hospitalName):
+	response = main.search(sidoCd='', sgguCd='', emdongNm=dong, yadmNm=hospitalName, key=main.hospital_pw, url=main.hospital_url)
+
+	from xml.etree import ElementTree
+	HospitalTree = ElementTree.fromstring(response.content)
+	hospitalElememt = HospitalTree.iter("item")
+
+	hospitalList = []
+	for item in hospitalElememt:
+		hospital = Hospital()
+		hospital.getInfo(item)
+		hospitalList.append(hospital)
+
+	return hospitalList
+	
+def searchPharmacy(dong, posx, posy):
+	response = main.search(emdongNm=dong, xPos=posx, yPos=posy, key=main.pharmacy_pw, url=main.pharmacy_url)
+
+	
+	from xml.etree import ElementTree
+	HospitalTree = ElementTree.fromstring(response.content)
+	hospitalElememt = HospitalTree.iter("item")
+
+	pharmacyList = []
+	for item in hospitalElememt:
+		hospital = Hospital()
+		hospital.getInfo(item)
+		pharmacyList.append(hospital)
+
+	return pharmacyList[0]
+
+
+def sendMessage(user, msg): 
+	try:
+		bot.sendMessage(user, msg) 
+	except: 
+		return
 
 # from noti import bot
 bot.message_loop(handle)
