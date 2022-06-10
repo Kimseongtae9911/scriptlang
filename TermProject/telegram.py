@@ -1,15 +1,15 @@
+from math import dist
 import time
 import sqlite3
 from urllib import response
 import telepot
 from pprint import pprint
 from urllib.request import urlopen
-import re
-from datetime import date, datetime
 
 import Hospital as main
 from InfoClass import Hospital
-from TermProject.InfoClass import Pharmacy
+from InfoClass import Pharmacy
+from locationDict import *
 
 bot = telepot.Bot("5595829384:AAGCIPcSZZG5MD62bvve8GAd3X7g6CTBgYE")
 
@@ -17,6 +17,11 @@ bot.sendMessage("5460751414", "hello")
 
 key = '5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=='
 
+def findSIGUNGU(umd):
+	for key, val in UPMYONDONG.items():
+		if umd in val:
+			return key
+	return None
 
 
 def handle(msg): 
@@ -28,32 +33,47 @@ def handle(msg):
 	text = msg['text'] 
 	args = text.split(' ')
 
-	if len(args) >= 2 and args[0].endswith("동"):
-		res = searchHospital(args[0], args[1])
-
-		if len(res):
-			respond = "============병원 정보============\n"
-			for hos in res:
-				respond += "병원 명 : " + hos.yadmNm + ', ' + hos.yadmNm + '\n'
-				respond += "주소 : " + hos.addr + '\n'
-				respond += "전화번호 : " + hos.telno + '\n\n'
-				respond += '---주변 약국--\n'
-
-			
-
-			sendMessage(chat_id, respond)
-		else:
-			sendMessage(chat_id, '잘못된 병원명 혹은 동 입니다!')
-
-
-	else:
-		 sendMessage(chat_id, '''모르는 명령어입니다.\n
+	if len(args) != 2:
+		sendMessage(chat_id, '''모르는 명령어입니다.\n
 		[동(읍면) 병원명]을 입력해주세요
 		예시) 정왕동 시화병원.''')
+		return
+	
+	sigungu = findSIGUNGU(args[0])
+
+	if sigungu is None:
+		sendMessage(chat_id, '알 수 없는 동 입니다. \n다시 입력해주세요')
+		return
+
+	sggcd = SIGUNGU[sigungu]
+	sdcd = (sggcd // 10000) * 10000
+
+	res = searchHospital(args[0], args[1], str(sdcd), str(sggcd))
+
+	if len(res) <= 0:
+		sendMessage(chat_id, '알 수 없는 병원 이름 입니다. \n다시 입력해주세요')
+		return
+
+	respond = "============병원 정보============\n"
+	for hos in res:
+		respond += "병원 명 : " + hos.yadmNm + ', ' + hos.yadmNm + '\n'
+		respond += "주소 : " + hos.addr + '\n'
+		respond += "전화번호 : " + hos.telno + '\n\n'
+
+		pharRes = searchPharmacy(args[0], hos.pos[0], hos.pos[1], str(sdcd), str(sggcd))
+		if len(pharRes):
+			pharRes.sort(key=lambda x : x.distance)
+			respond += '---가장 가까운 약국--\n'
+			respond += '약국 명  : ' + pharRes[0].yadmNm + '\n'
+			respond += '거리 : {0:0.1f}m\n'.format(pharRes[0].distance)
+			respond += '================================\n'
+			print(pharRes[0].distance)
+			
+	sendMessage(chat_id, respond)
 
 
-def searchHospital(dong, hospitalName):
-	response = main.search(sidoCd='', sgguCd='', emdongNm=dong, yadmNm=hospitalName, key=main.hospital_pw, url=main.hospital_url)
+def searchHospital(dong, hospitalName, sdcd='', sggcd=''):
+	response = main.search(sidoCd=sdcd, sgguCd=sggcd, emdongNm=dong, yadmNm=hospitalName, key=main.hospital_pw, url=main.hospital_url)
 
 	from xml.etree import ElementTree
 	HospitalTree = ElementTree.fromstring(response.content)
@@ -67,9 +87,8 @@ def searchHospital(dong, hospitalName):
 
 	return hospitalList
 	
-def searchPharmacy(dong, posx, posy):
-	response = main.search(emdongNm=dong, xPos=posx, yPos=posy, key=main.pharmacy_pw, url=main.pharmacy_url)
-
+def searchPharmacy(dong, posx, posy, sdcd='', sggcd=''):
+	response = main.search(sidoCd=sdcd, sgguCd=sggcd, emdongNm=dong, xPos=posx, yPos=posy, key=main.pharmacy_pw, url=main.pharmacy_url, radius=1000, numOfRows=500)
 	
 	from xml.etree import ElementTree
 	HospitalTree = ElementTree.fromstring(response.content)
@@ -77,11 +96,11 @@ def searchPharmacy(dong, posx, posy):
 
 	pharmacyList = []
 	for item in hospitalElememt:
-		hospital = Hospital()
-		hospital.getInfo(item)
-		pharmacyList.append(hospital)
+		pharmacy = Pharmacy()
+		pharmacy.getInfo(item)
+		pharmacyList.append(pharmacy)
 
-	return pharmacyList[0]
+	return pharmacyList
 
 
 def sendMessage(user, msg): 
