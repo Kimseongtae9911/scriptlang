@@ -39,11 +39,11 @@ class MainWindow:
 
 		# 로고
 		img = (Image.open('TermProject/Resource/Title.png'))
-		titleImage = img.resize((250, 90), Image.ANTIALIAS)
+		titleImage = img.resize((300, 70))
 		self.titleImage = ImageTk.PhotoImage(titleImage)
-		self.canvas = Canvas(frameTitle, width=480, height=100, bg='#2F455C')
+		self.canvas = Canvas(frameTitle, width=480, height=100, bg='#2F455C', relief=RIDGE, borderwidth=5)
 		self.canvas.pack()
-		self.canvas.create_image(240, 45, anchor='center', image=self.titleImage)
+		self.canvas.create_image(240, 53, anchor='center', image=self.titleImage)
 		# self.title = Label(frameTitle, image=self.titleImage, width=480, height=40)
 		# self.title.pack()
 
@@ -51,9 +51,9 @@ class MainWindow:
 		self.SIDO = ''
 		self.SIGUNGU = ''
 		self.UPMYONDONG = ''
-		self.listBoxSIDO = Listbox(frameHospital, selectmode='extended', height=10, width=13)
-		self.listBoxSIGUNGU = Listbox(frameHospital, selectmode='extended', height=10, width=13)
-		self.listBoxUPMYONDONG = Listbox(frameHospital, selectmode='extended', height=10, width=13)
+		self.listBoxSIDO = Listbox(frameHospital, selectmode='extended', height=10, width=13, highlightthickness=3, highlightbackground='#97A2AE')
+		self.listBoxSIGUNGU = Listbox(frameHospital, selectmode='extended', height=10, width=13, highlightthickness=3, highlightbackground='#97A2AE')
+		self.listBoxUPMYONDONG = Listbox(frameHospital, selectmode='extended', height=10, width=13, highlightthickness=3, highlightbackground='#97A2AE')
 		self.listBoxSIDO.bind('<<ListboxSelect>>', self.SIDOSelect)
 		self.listBoxSIGUNGU.bind('<<ListboxSelect>>', self.SIGUNGUSelect)
 		self.listBoxUPMYONDONG.bind('<<ListboxSelect>>', self.UPMYONDONGSelect)
@@ -73,9 +73,9 @@ class MainWindow:
 		self.comboBoxsubject.current(0)
 
 		# 병원 - 이름
-		frameNameSearch = Frame(frameEntry, padx=65, pady=10, bg='#2F455C')
+		frameNameSearch = Frame(frameEntry, padx=10, pady=10, bg='#2F455C')
 		frameNameSearch.pack(side='left')
-		self.entryHospitalName = Entry(frameNameSearch, font=("나눔고딕코딩", 13), width=15)
+		self.entryHospitalName = Entry(frameNameSearch, font=("나눔고딕코딩", 13), width=25, borderwidth=5)
 		self.entryHospitalName.insert(0, "병원 명 입력")
 		self.entryHospitalName.bind('<Button-1>', self.EntryClick)
 		self.entryHospitalName.pack(anchor='center')
@@ -93,15 +93,15 @@ class MainWindow:
 		#self.entryPosY.grid(row=1, column=1)
 
 		# 병원 - 검색 버튼
-		frameSearch = Frame(frameEntry, padx=10, pady=10, width=250, bg='#2F455C')
+		frameSearch = Frame(frameEntry, padx=15, pady=10, width=250, bg='#2F455C')
 		frameSearch.pack()
-		self.buttonSearch = Button(frameSearch, font=("나눔고딕코딩", 13), text="검색", width=6, height=2, command=self.pressedSearch)
+		self.buttonSearch = Button(frameSearch, font=("나눔고딕코딩", 13), text="검색", width=6, height=2, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedSearch)
 		self.buttonSearch.pack()
 
 		# 결과창
-		self.listboxHospital = Listbox(frameResultList, selectmode='extended', width=30)
+		self.listboxHospital = Listbox(frameResultList, selectmode='extended', width=30, highlightthickness=3, highlightbackground='#97A2AE')
 		self.listboxHospital.bind('<<ListboxSelect>>', self.hospitalSelect)
-		self.listboxPharmacy = Listbox(frameResultList, selectmode='extended', width=30)
+		self.listboxPharmacy = Listbox(frameResultList, selectmode='extended', width=30, highlightthickness=3, highlightbackground='#97A2AE')
 		self.listboxPharmacy.bind('<<ListboxSelect>>', self.pharmacySelect)
 		self.listboxHospital.pack(side='left', fill='both', padx=10)
 		self.listboxPharmacy.pack(side='right', fill='both', padx=10)
@@ -119,15 +119,15 @@ class MainWindow:
 		self.mapphoto = PhotoImage(file='TermProject/Resource/Map.png')
 
 		# 좌우 버튼
-		self.buttonGoPerv = Button(frameLeftRight, image=self.leftImage, command=self.pressedPrev)
-		self.buttonGoNext = Button(frameLeftRight, image=self.rightImage, command=self.pressedNext)
+		self.buttonGoPerv = Button(frameLeftRight, image=self.leftImage, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedPrev)
+		self.buttonGoNext = Button(frameLeftRight, image=self.rightImage, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedNext)
 		self.buttonGoPerv.pack(side='left', padx=px)
 		self.buttonGoNext.pack(side='right', padx=px)
 		self.page = 1
 
 		# 이메일, 지도 버튼
-		self.buttonEmailSendButton = Button(frameEmailMap, image=self.emailPhoto, command=self.pressedEmail)
-		self.buttonMap = Button(frameEmailMap, image=self.mapphoto, command=self.pressedMap)
+		self.buttonEmailSendButton = Button(frameEmailMap, image=self.emailPhoto, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedEmail)
+		self.buttonMap = Button(frameEmailMap, image=self.mapphoto, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedMap)
 		self.buttonEmailSendButton.pack(side='left', padx=px)
 		self.buttonMap.pack(side='right', padx=px)
 
@@ -293,6 +293,7 @@ class MainWindow:
 			if SIDO[self.SIDO] != '' and SIDO[self.SIDO] == SIGUNGU[data] // 10000:
 				self.listBoxSIGUNGU.insert(END, data)
 
+		MainWindow.SortSIGUNGU(self)
 
 # 시군구 선택
 	def SIGUNGUSelect(self, event):
@@ -307,6 +308,8 @@ class MainWindow:
 		# 읍면동 리스트박스 갱신
 		for data in UPMYONDONG[self.SIGUNGU]:
 			self.listBoxUPMYONDONG.insert(END, data)
+
+		MainWindow.SortUPMYONDONG(self)
 
 
 # 읍면동 선택
@@ -351,8 +354,6 @@ class MainWindow:
 
 		for i,pharmacy in enumerate(self.pharmacyList):
 			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + pharmacy.yadmNm)
-		
-
 
 # 약국 이름 선택
 	def pharmacySelect(self, event):
@@ -363,17 +364,74 @@ class MainWindow:
 		print(cur)
 		print(self.pharmacyList[cur].distance)
 		pass
+	
+# 시군구 정렬
+	def SortSIGUNGU(self):
+		si = []
+		gun = []
+		gu = []
+		rest = []
+		for data in range(self.listBoxSIGUNGU.size()):
+			if self.listBoxSIGUNGU.get(data)[-1] == '시':
+				si.append(self.listBoxSIGUNGU.get(data))		
+			elif self.listBoxSIGUNGU.get(data)[-1] == '군':
+				gun.append(self.listBoxSIGUNGU.get(data))
+			elif self.listBoxSIGUNGU.get(data)[-1] == '구':
+				gu.append(self.listBoxSIGUNGU.get(data))
+			else:
+				rest.append(self.listBoxSIGUNGU.get(data))
+		si.sort()
+		gun.sort()
+		gu.sort()
+		rest.sort()
 
-	def testSetting(self):
-		self.listBoxSIGUNGU.insert(END, "시흥시")
-		self.listBoxSIGUNGU.insert(END, "asdf")
-		self.listBoxSIGUNGU.insert(END, "zxcv")
+		self.listBoxSIGUNGU.delete(0, END)
+		for data in si:
+			self.listBoxSIGUNGU.insert(END, data)
+		for data in gun:
+			self.listBoxSIGUNGU.insert(END, data)
+		for data in gu:
+			self.listBoxSIGUNGU.insert(END, data)
+		for data in rest:
+			self.listBoxSIGUNGU.insert(END, data)
 
-		self.listBoxUPMYONDONG.insert(END, "정왕동")
-		self.listBoxUPMYONDONG.insert(END, "456")
-		self.listBoxUPMYONDONG.insert(END, "789")
-		pass
+# 읍면동 정렬
+	def SortUPMYONDONG(self):
+		# 동 가 읍 면
+		dong = []
+		ga = []
+		up = []
+		myon = []
+		rest = []
+		for data in range(self.listBoxUPMYONDONG.size()):
+			if self.listBoxUPMYONDONG.get(data)[-1] == '읍':
+				up.append(self.listBoxUPMYONDONG.get(data))
+			elif self.listBoxUPMYONDONG.get(data)[-1] == '면':
+				myon.append(self.listBoxUPMYONDONG.get(data))
+			elif self.listBoxUPMYONDONG.get(data)[-1] == '동':
+				dong.append(self.listBoxUPMYONDONG.get(data))
+			elif self.listBoxUPMYONDONG.get(data)[-1] == '가':
+				ga.append(self.listBoxUPMYONDONG.get(data))
+			else:
+				rest.append(self.listBoxUPMYONDONG.get(data))
 
+		dong.sort()
+		ga.sort()
+		up.sort()
+		myon.sort()
+		rest.sort()
+		self.listBoxUPMYONDONG.delete(0, END)
+		for data in up:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in myon:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in dong:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in ga:
+			self.listBoxUPMYONDONG.insert(END, data)
+		for data in rest:
+			self.listBoxUPMYONDONG.insert(END, data)
+		
 
 def search(url, key, page='1', numOfRows='20', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
 	# 병원을 검색한다
