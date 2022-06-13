@@ -20,6 +20,7 @@ pharmacy_url = 'http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBas
 
 class MainWindow:
 	def __init__(self):
+		self.helpinfo = None
 		# 창 기본 설정
 		self.width = 500
 		self.height = 810
@@ -38,7 +39,7 @@ class MainWindow:
 		frameResultList.pack(side='bottom', fill='both', expand=True)
 
 		# 로고
-		img = (Image.open('TermProject/Resource/Title.png'))
+		img = (Image.open('Resource/Title.png'))
 		titleImage = img.resize((300, 70))
 		self.titleImage = ImageTk.PhotoImage(titleImage)
 		self.canvas = Canvas(frameTitle, width=480, height=100, bg='#2F455C', relief=RIDGE, borderwidth=5)
@@ -113,10 +114,10 @@ class MainWindow:
 		frameEmailMap.pack(side='right', expand=True)
 		px = 25
 
-		self.leftImage = PhotoImage(file='TermProject/Resource/Left.png')
-		self.rightImage = PhotoImage(file='TermProject/Resource/Right.png')
-		self.emailPhoto = PhotoImage(file='TermProject/Resource/Email.png')
-		self.mapphoto = PhotoImage(file='TermProject/Resource/Map.png')
+		self.leftImage = PhotoImage(file='Resource/Left.png')
+		self.rightImage = PhotoImage(file='Resource/Right.png')
+		self.emailPhoto = PhotoImage(file='Resource/Email.png')
+		self.mapphoto = PhotoImage(file='Resource/Map.png')
 
 		# 좌우 버튼
 		self.buttonGoPerv = Button(frameLeftRight, image=self.leftImage, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedPrev)
@@ -235,6 +236,10 @@ class MainWindow:
 		# 없다면 리스트의 모든 병원 표시
 
 		i = 0
+
+		if self.hospitalList == []:
+			tkinter.messagebox.showinfo('오류', '검색을 먼저 해주세요')
+			return
 
 		# 병원을 선택안했을 때
 		if self.listboxHospital.curselection() == ():
