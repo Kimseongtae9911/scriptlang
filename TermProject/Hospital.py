@@ -20,6 +20,7 @@ pharmacy_url = 'http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBas
 
 class MainWindow:
 	def __init__(self):
+		self.helpinfo = None
 		# 창 기본 설정
 		self.width = 500
 		self.height = 810
@@ -222,6 +223,10 @@ class MainWindow:
 		# 없다면 리스트의 모든 병원 표시
 
 		i = 0
+
+		if self.hospitalList == []:
+			tkinter.messagebox.showinfo('오류', '검색을 먼저 해주세요')
+			return
 
 		# 병원을 선택안했을 때
 		if self.listboxHospital.curselection() == ():
