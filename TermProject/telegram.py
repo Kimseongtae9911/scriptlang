@@ -6,7 +6,7 @@ import telepot
 from pprint import pprint
 from urllib.request import urlopen
 
-import Hospital as main
+# import Hospital as main
 from InfoClass import Hospital
 from InfoClass import Pharmacy
 from locationDict import *
@@ -15,7 +15,11 @@ bot = telepot.Bot("5595829384:AAGCIPcSZZG5MD62bvve8GAd3X7g6CTBgYE")
 
 bot.sendMessage("5460751414", "hello")
 
-key = '5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=='
+hospital_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
+pharmacy_pw = "5wsKqI6xrBpV5YTufFeyzDKJeU+SGnMJpBz87SPB4sfds/wcAwRU3K1d72Ph5mSLJL+VwfIqeffp4WvfklvOpg=="
+
+hospital_url = 'http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1'
+pharmacy_url = 'http://apis.data.go.kr/B551182/pharmacyInfoService/getParmacyBasisList'
 
 def findSIGUNGU(umd):
 	for key, val in UPMYONDONG.items():
@@ -73,7 +77,7 @@ def handle(msg):
 
 
 def searchHospital(dong, hospitalName, sdcd='', sggcd=''):
-	response = main.search(sidoCd=sdcd, sgguCd=sggcd, emdongNm=dong, yadmNm=hospitalName, key=main.hospital_pw, url=main.hospital_url)
+	response = search(sidoCd=sdcd, sgguCd=sggcd, emdongNm=dong, yadmNm=hospitalName, key=hospital_pw, url=hospital_url)
 
 	from xml.etree import ElementTree
 	HospitalTree = ElementTree.fromstring(response.content)
@@ -88,7 +92,7 @@ def searchHospital(dong, hospitalName, sdcd='', sggcd=''):
 	return hospitalList
 	
 def searchPharmacy(dong, posx, posy, sdcd='', sggcd=''):
-	response = main.search(sidoCd=sdcd, sgguCd=sggcd, emdongNm=dong, xPos=posx, yPos=posy, key=main.pharmacy_pw, url=main.pharmacy_url, radius=1000, numOfRows=500)
+	response = search(sidoCd=sdcd, sgguCd=sggcd, emdongNm=dong, xPos=posx, yPos=posy, key=pharmacy_pw, url=pharmacy_url, radius=1000, numOfRows=500)
 	
 	from xml.etree import ElementTree
 	HospitalTree = ElementTree.fromstring(response.content)
@@ -101,6 +105,19 @@ def searchPharmacy(dong, posx, posy, sdcd='', sggcd=''):
 		pharmacyList.append(pharmacy)
 
 	return pharmacyList
+
+
+def search(url, key, page='1', numOfRows='20', sidoCd='', sgguCd='', emdongNm='', yadmNm='', zipCd='', clCd='', dgsbjtCd='', xPos='', yPos='', radius=''):
+	# 병원을 검색한다
+	import requests
+	if yadmNm == '병원 명 입력':
+		yadmNm = ''
+	params = {
+		'serviceKey' : key, 'pageNo' : page, 'numOfRows' : numOfRows, 'sidoCd' : sidoCd, 
+		'sgguCd' : sgguCd, 'emdongNm' : emdongNm, 'yadmNm' : yadmNm, 'zipCd' : zipCd, 
+		'clCd' : clCd, 'dgsbjtCd' : dgsbjtCd, 'xPos' : xPos, 'yPos' : yPos, 'radius' : radius }
+
+	return requests.get(url, params=params)
 
 
 def sendMessage(user, msg): 

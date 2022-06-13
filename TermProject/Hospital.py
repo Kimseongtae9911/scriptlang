@@ -38,14 +38,12 @@ class MainWindow:
 		frameResultList.pack(side='bottom', fill='both', expand=True)
 
 		# 로고
-		img = (Image.open('TermProject/Resource/Title.png'))
+		img = (Image.open('Resource/Title.png'))
 		titleImage = img.resize((300, 70))
 		self.titleImage = ImageTk.PhotoImage(titleImage)
 		self.canvas = Canvas(frameTitle, width=480, height=100, bg='#2F455C', relief=RIDGE, borderwidth=5)
 		self.canvas.pack()
 		self.canvas.create_image(240, 53, anchor='center', image=self.titleImage)
-		# self.title = Label(frameTitle, image=self.titleImage, width=480, height=40)
-		# self.title.pack()
 
 		# 병원 카테고리 - 지역
 		self.SIDO = ''
@@ -81,17 +79,6 @@ class MainWindow:
 		self.entryHospitalName.pack(anchor='center')
 
 
-		# 병원 - 위치
-		#frameSubEntry = Frame(frameEntry, padx=10, pady=10)
-		#frameSubEntry.pack(side='left', fill='x')
-
-		#self.entryPosX = Entry(frameSubEntry, font=("나눔고딕코딩", 13), width=15)
-		#self.entryPosY = Entry(frameSubEntry, font=("나눔고딕코딩", 13), width=15)
-		#Label(frameSubEntry, font=("나눔고딕코딩", 13), text='x').grid(row=0, column=0, pady=10)
-		#Label(frameSubEntry, font=("나눔고딕코딩", 13), text='y').grid(row=1, column=0, pady=10)
-		#self.entryPosX.grid(row=0, column=1)
-		#self.entryPosY.grid(row=1, column=1)
-
 		# 병원 - 검색 버튼
 		frameSearch = Frame(frameEntry, padx=15, pady=10, width=250, bg='#2F455C')
 		frameSearch.pack()
@@ -113,10 +100,10 @@ class MainWindow:
 		frameEmailMap.pack(side='right', expand=True)
 		px = 25
 
-		self.leftImage = PhotoImage(file='TermProject/Resource/Left.png')
-		self.rightImage = PhotoImage(file='TermProject/Resource/Right.png')
-		self.emailPhoto = PhotoImage(file='TermProject/Resource/Email.png')
-		self.mapphoto = PhotoImage(file='TermProject/Resource/Map.png')
+		self.leftImage = PhotoImage(file='Resource/Left.png')
+		self.rightImage = PhotoImage(file='Resource/Right.png')
+		self.emailPhoto = PhotoImage(file='Resource/Email.png')
+		self.mapphoto = PhotoImage(file='Resource/Map.png')
 
 		# 좌우 버튼
 		self.buttonGoPerv = Button(frameLeftRight, image=self.leftImage, relief=RIDGE, borderwidth=5, bg='#97A2AE', command=self.pressedPrev)
