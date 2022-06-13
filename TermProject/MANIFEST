@@ -7,9 +7,12 @@ Server.py
 Setup.py
 locationDict.py
 returnstr.c
+telegram.py
 Resource\Email.png
+Resource\Help.png
 Resource\Left.png
 Resource\Map.png
 Resource\Right.png
 Resource\Title.png
+Resource\UI.png
 Resource\logo.png
