@@ -22,8 +22,8 @@ class Mail():
 
         # Entry로부터 입력
         Mail.fromAddr = Mail.inputEmail.get()
-        Mail.password = Mail.inputEmail2.get()
-        # Mail.password = 'vzgshxkajhlygayw'
+        # Mail.password = Mail.inputEmail2.get()
+        Mail.password = 'vzgshxkajhlygayw'
         Mail.toAddr = Mail.inputEmail3.get()
 
         msg = MIMEMultipart()

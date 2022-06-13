@@ -124,6 +124,7 @@ class MainWindow:
 		self.pharmacyList = []
 
 		self.lastSelectHospitalIdx = -1
+		self.select = 0
 		self.lastPage = False
 
 		for data in SIDO:
@@ -161,7 +162,7 @@ class MainWindow:
 			return
 		
 		if server.puwindow == None:
-			if self.lastSelectHospitalIdx >= 0:
+			if self.select == 1:
 				Mail.popupInput(self.hospitalList[self.lastSelectHospitalIdx], self.pharmacyList)
 			else:
 				Mail.popupInput(self.hospitalList, self.pharmacyList)
@@ -170,6 +171,7 @@ class MainWindow:
 # 검색 버튼
 	def pressedSearch(self):
 		self.lastSelectHospitalIdx = 1
+		self.select = 0
 		self.hospitalSearch()
 		
 # 진짜 검색
@@ -346,6 +348,8 @@ class MainWindow:
 
 		for i,pharmacy in enumerate(self.pharmacyList):
 			self.listboxPharmacy.insert(END, "[{:}]: ".format(i + 1) + pharmacy.yadmNm)
+
+		self.select = 1
 
 # 약국 이름 선택
 	def pharmacySelect(self, event):
